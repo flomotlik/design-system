@@ -64,6 +64,54 @@ layer.
 Every colour in the source carries its measured contrast ratio in a comment.
 If you change one, re-measure it and update the number.
 
+## Themes
+
+A theme is a flat set of token values and nothing else — it never touches a
+component. Set it on `<html>`, `<body>`, or any element:
+
+```html
+<html data-fm-theme="report" data-fm-density="dense">
+```
+
+| Theme | For | Character |
+|---|---|---|
+| `tool` (default) | interactive tools, dashboards, viewers | screen-first, neutral ground, ink-blue primary |
+| `report` | reports and audits | near-monochrome, tighter by default, made to be printed |
+| `notebook` | briefs and notes | warm paper, editorial ink |
+
+Three independent axes, which compose:
+
+| Attribute | Values | Does |
+|---|---|---|
+| `data-fm-theme` | `tool` · `report` · `notebook` | The palette and its dark counterpart |
+| `data-fm-scheme` | `light` · `dark` | Pins the colour scheme. Omit to follow the viewer's system setting |
+| `data-fm-density` | `normal` · `compact` · `dense` | Tightens the spacing scale, so it reaches every component at once |
+
+A theme carries a preferred density; an explicit `data-fm-density` still wins.
+
+Every theme has its own dark palette rather than a filter applied on top.
+Without `data-fm-scheme` the page follows `prefers-color-scheme`; with it, the
+choice wins in both directions.
+
+The selectors are plain attribute selectors, so a theme can be scoped to a
+subtree — useful for a preview pane or a side-by-side comparison.
+
+**Three things a theme may not change:**
+
+- **Status colours.** `--fm-web-status-*` and the warn/error/success variants
+  are declared once and mean the same thing everywhere. Only `info` follows the
+  brand, on purpose.
+- **High contrast.** `.fm-mode-hc` resolves through `--fm-hc-surface` /
+  `--fm-hc-text` / `--fm-hc-accent`, which are fixed and sit outside the theme
+  system. It is an accessibility mode, so it has to land in the same
+  deterministic place under every theme and scheme.
+- **Print.** Printing resets the tokens to the report palette whatever is on
+  screen and sets an A4 page box. A dark theme printing dark wastes toner and
+  usually comes out unreadable.
+
+If none of the three fits, do not add a fourth — override the tokens in your
+own stylesheet, below.
+
 ### Re-theming
 
 Link your own stylesheet after the design system and override tokens in a
@@ -74,8 +122,9 @@ plain `:root` block:
 <link rel="stylesheet" href="local.css">
 ```
 
-A plain `:root` block is enough because the defaults live in `@layer` rules,
-and unlayered declarations beat layered ones regardless of document order.
+A plain `:root` block is enough because the defaults *and the themes* live in
+`@layer` rules, and unlayered declarations beat layered ones regardless of
+document order — so your override wins over every built-in theme.
 
 Two rules:
 

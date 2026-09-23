@@ -133,6 +133,21 @@
     }
     .doc-toc { columns: 2; column-gap: var(--fm-space-5); margin: 0; padding-left: 1.1rem; }
     .doc-toc li { margin-bottom: 0.3rem; break-inside: avoid; }
+    .doc-switchbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--fm-web-surface);
+      border-bottom: 1px solid var(--fm-web-hairline);
+      padding: var(--fm-space-2) 0;
+    }
+    .doc-switchbar__inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--fm-space-3);
+      align-items: center;
+    }
+
     .doc-placeholder {
       background: var(--fm-web-primary-tint);
       border: 1px solid var(--fm-web-primary);
@@ -161,12 +176,74 @@
           <li><a href="#colour">Colour</a></li>
           <li><a href="#type">Type</a></li>
           <li><a href="#layout">Layout</a></li>
+          <li><a href="#themes">Themes</a></li>
           <li><a href="#components">Components</a></li>
           <li><a href="#theming">Theming</a></li>
         </ul>
       </nav>
     </div>
   </header>
+
+  <!-- Live switcher. It sets data-fm-theme / data-fm-scheme / data-fm-density
+       on <html>; everything below re-renders from the tokens alone. That is the
+       whole point of the theme layer — no component is touched. -->
+  <div class="doc-switchbar">
+    <div class="fm-container doc-switchbar__inner">
+      <div class="fm-switcher">
+        <span class="fm-switcher__label">Theme</span>
+        <button type="button" class="fm-switch-btn is-active" data-set="theme" data-val="tool">Tool</button>
+        <button type="button" class="fm-switch-btn" data-set="theme" data-val="report">Report</button>
+        <button type="button" class="fm-switch-btn" data-set="theme" data-val="notebook">Notebook</button>
+      </div>
+      <div class="fm-switcher">
+        <span class="fm-switcher__label">Scheme</span>
+        <button type="button" class="fm-switch-btn is-active" data-set="scheme" data-val="system">System</button>
+        <button type="button" class="fm-switch-btn" data-set="scheme" data-val="light">Light</button>
+        <button type="button" class="fm-switch-btn" data-set="scheme" data-val="dark">Dark</button>
+      </div>
+      <div class="fm-switcher">
+        <span class="fm-switcher__label">Density</span>
+        <button type="button" class="fm-switch-btn is-active" data-set="density" data-val="normal">Normal</button>
+        <button type="button" class="fm-switch-btn" data-set="density" data-val="compact">Compact</button>
+        <button type="button" class="fm-switch-btn" data-set="density" data-val="dense">Dense</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var KEYS = { theme: 'data-fm-theme', scheme: 'data-fm-scheme', density: 'data-fm-density' };
+
+      function store(k, v) {
+        try { localStorage.setItem('fm-sg-' + k, v); } catch (e) { /* private mode */ }
+      }
+      function read(k) {
+        try { return localStorage.getItem('fm-sg-' + k); } catch (e) { return null; }
+      }
+      function apply(k, v) {
+        var attr = KEYS[k];
+        // "system" means: express no opinion and let prefers-color-scheme decide.
+        if (v === 'system') root.removeAttribute(attr);
+        else root.setAttribute(attr, v);
+        document.querySelectorAll('[data-set="' + k + '"]').forEach(function (b) {
+          b.classList.toggle('is-active', b.dataset.val === v);
+        });
+      }
+
+      Object.keys(KEYS).forEach(function (k) {
+        var saved = read(k);
+        if (saved) apply(k, saved);
+      });
+
+      document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-set]');
+        if (!btn) return;
+        apply(btn.dataset.set, btn.dataset.val);
+        store(btn.dataset.set, btn.dataset.val);
+      });
+    })();
+  </script>
 
   <main id="main">
 
@@ -223,6 +300,7 @@
           <li><a href="#toast">Toast</a></li>
           <li><a href="#toolbar">Toolbar</a></li>
           <li><a href="#search">Search</a></li>
+          <li><a href="#themes">Themes</a></li>
           <li><a href="#hc">High contrast</a></li>
           <li><a href="#theming">Theming</a></li>
         </ul>
@@ -1354,6 +1432,106 @@ createSearch({
           <tr><td><code class="doc-code">--empty</code></td><td>The field is empty</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section class="fm-section" id="themes">
+    <div class="fm-container">
+      <h2 class="fm-headline">Themes</h2>
+      <p class="fm-prose doc-lead">
+        A theme is a flat set of token values and nothing else. It never touches
+        a component — which is why switching one at the top of this page
+        re-renders everything below without a single component rule being
+        involved.
+      </p>
+
+      <div class="doc-codeblock">&lt;html data-fm-theme="report" data-fm-density="dense"&gt;</div>
+
+      <table class="doc-table">
+        <thead><tr><th>Theme</th><th>For</th><th>Character</th></tr></thead>
+        <tbody>
+          <tr><td><code class="doc-code">tool</code> (default)</td><td>interactive tools, dashboards, viewers</td><td>screen-first, neutral ground, ink-blue primary</td></tr>
+          <tr><td><code class="doc-code">report</code></td><td>reports and audits</td><td>near-monochrome, tighter by default, made to be printed</td></tr>
+          <tr><td><code class="doc-code">notebook</code></td><td>briefs and notes</td><td>warm paper, editorial ink</td></tr>
+        </tbody>
+      </table>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Three independent axes</h3>
+        <table class="doc-table">
+          <thead><tr><th>Attribute</th><th>Values</th><th>Does</th></tr></thead>
+          <tbody>
+            <tr><td><code class="doc-code">data-fm-theme</code></td><td>tool · report · notebook</td><td>The palette and its dark counterpart</td></tr>
+            <tr><td><code class="doc-code">data-fm-scheme</code></td><td>light · dark</td><td>Pins the colour scheme. Omit it to follow the viewer's system setting</td></tr>
+            <tr><td><code class="doc-code">data-fm-density</code></td><td>normal · compact · dense</td><td>Tightens the spacing scale, so it propagates to every component at once</td></tr>
+          </tbody>
+        </table>
+        <p class="fm-prose doc-lead">
+          They compose: a theme carries a preferred density, and an explicit
+          <code class="doc-code">data-fm-density</code> still wins over it.
+        </p>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Dark mode belongs to the theme</h3>
+        <p class="fm-prose doc-lead">
+          Every theme carries its own dark palette rather than having a filter
+          applied on top. Without <code class="doc-code">data-fm-scheme</code> the
+          page follows <code class="doc-code">prefers-color-scheme</code>; with it,
+          the choice wins in both directions.
+        </p>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">What a theme may not do</h3>
+        <ul class="fm-prose doc-lead">
+          <li><strong>Status colours are not part of a theme.</strong>
+            <code class="doc-code">--fm-web-status-*</code> and the
+            warn/error/success variants are declared once and keep their meaning
+            everywhere. Switch through all three themes above and watch the
+            callouts: only <code class="doc-code">info</code> moves, because it
+            follows the brand on purpose.</li>
+          <li><strong>High contrast is not a theme.</strong>
+            <code class="doc-code">.fm-mode-hc</code> resolves to a fixed
+            near-black and amber pair through
+            <code class="doc-code">--fm-hc-surface</code> /
+            <code class="doc-code">--fm-hc-text</code>, deliberately outside the
+            theme system. It is an accessibility mode, so it has to land in the
+            same place under every theme and scheme.</li>
+          <li><strong>Print is always light.</strong> Printing resets the tokens
+            to the report palette whatever is on screen, and sets an A4 page box.
+            A dark theme printing dark wastes toner and usually comes out
+            unreadable.</li>
+        </ul>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Scoping a theme to part of a page</h3>
+        <p class="fm-prose doc-lead">
+          The selectors are plain attribute selectors, not
+          <code class="doc-code">:root</code>-only, so a theme can be applied to a
+          subtree — useful for a preview pane or a side-by-side comparison.
+        </p>
+        <div class="doc-demo" data-fm-theme="notebook" style="padding: var(--fm-space-4);">
+          <p class="fm-prose" style="margin-top:0;">This box is
+            <code class="doc-code">data-fm-theme="notebook"</code> while the page
+            around it is not.</p>
+          <a class="fm-btn fm-btn--primary" href="#themes">Primary</a>
+          <span class="fm-tag fm-tag--ok" style="margin-left:.5rem;">Ok</span>
+        </div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Your own theme</h3>
+        <p class="fm-prose doc-lead">
+          If none of the three fits, do not add a fourth here — override the
+          tokens in your own stylesheet, as described in
+          <a href="#theming">Theming</a>. A consuming tool's unlayered
+          <code class="doc-code">:root</code> block beats every theme above,
+          because these are declared inside
+          <code class="doc-code">@layer base</code>.
+        </p>
+      </div>
     </div>
   </section>
 

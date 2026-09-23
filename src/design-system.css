@@ -320,6 +320,8 @@
 
 @layer base {
   :root {
+    color-scheme: light;
+
     /* Brand colours */
     --fm-color-primary:        var(--color-fm-primary);
     --fm-color-primary-strong: var(--color-fm-primary-strong);
@@ -328,6 +330,15 @@
     --fm-color-accent:         var(--color-fm-accent);
     --fm-color-white:          var(--color-fm-white);
     --fm-color-ink:            var(--color-fm-ink);
+
+    /* High-contrast mode — FIXED, and deliberately outside the theme system.
+       HC is an accessibility mode, not a look: it must land on the same
+       deterministic near-black/amber pair whatever theme or colour scheme is
+       active. Keying it to --fm-color-ink (as it used to be) inverted it in
+       every dark theme and quietly destroyed the mode. */
+    --fm-hc-surface: #12120f;
+    --fm-hc-text:    #ffd84d;   /* 13.57:1 on hc-surface */
+    --fm-hc-accent:  #ff9a62;   /* 8.98:1 on hc-surface — errors, emphasis */
 
     /* Semantic roles */
     --fm-color-text:         var(--fm-color-ink);
@@ -539,6 +550,283 @@
     --fm-web-toolbar-shadow:    0 -2px 8px rgba(31,38,28,.08);
     --fm-web-toolbar-padding-x: var(--fm-space-3);
     --fm-web-toolbar-padding-y: var(--fm-space-2);
+  }
+
+  /* ======================================================================= *
+   * THEMES                                                                  *
+   *                                                                         *
+   * A theme is a flat set of token values and nothing else — it never        *
+   * touches a component. Switch with data-fm-theme on <html>, <body>, or any element:      *
+   *                                                                         *
+   *   <body data-fm-theme="report" data-fm-density="dense">                  *
+   *                                                                         *
+   *   tool      (default) interactive tools, dashboards, viewers             *
+   *   report    reports and audits: quiet, dense, print-aware                *
+   *   notebook  briefs and notes: warm paper, editorial                      *
+   *                                                                         *
+   * Themes set the Tailwind-namespace tokens (--color-fm-*), so the --fm-*   *
+   * aliases AND any generated utilities follow from one place.               *
+   *                                                                         *
+   * They are declared inside @layer base like the defaults, so a consuming   *
+   * tool's own unlayered :root block still wins over all of them.            *
+   *                                                                         *
+   * Status colours are NOT part of a theme. warn/error/success keep their    *
+   * meaning everywhere and are declared once, outside this block.            *
+   * ======================================================================= */
+
+  [data-fm-theme="tool"] {
+    /* Tool — the default, repeated so data-fm-theme="tool" is explicit */
+    color-scheme: light;
+    --color-fm-primary:           #1f4a6d;
+    --color-fm-primary-strong:    #14324a;
+    --color-fm-secondary:         #8fb4cc;
+    --color-fm-accent:            #9a4a1c;
+    --color-fm-highlight:         #ffd84d;
+    --color-fm-ink:               #1f2328;
+    --color-fm-web-bg:            #f4f6f8;
+    --color-fm-web-surface:       #ffffff;
+    --color-fm-web-surface-sunk:  #f8fafc;
+    --color-fm-web-hairline:      #dfe4ea;
+    --color-fm-web-text:          #22262b;
+    --color-fm-web-text-soft:     #5a616b;
+    --color-fm-web-text-mute:     #69707a;
+    --color-fm-web-clay-text:     #9c5a38;
+    --color-fm-web-primary-deep:  #245a80;
+    --color-fm-web-primary:       #5b8cad;
+    --color-fm-web-primary-tint:  #e4edf4;
+    --fm-color-surface:           #ffffff;
+    --fm-color-on-primary:        #ffffff;
+    --fm-color-on-secondary:      #1f2328;
+  }
+
+  [data-fm-theme="report"] {
+    /* Report — near-monochrome, tight, made to be printed.
+       It also prefers a tighter density. An explicit data-fm-density is
+       declared later at equal specificity and therefore still wins. */
+    color-scheme: light;
+    --fm-space-1: 0.2rem;   --fm-space-2: 0.4rem;   --fm-space-3: 0.75rem;
+    --fm-space-4: 1.1rem;   --fm-space-5: 1.5rem;   --fm-space-6: 2.2rem;
+    --color-fm-primary:           #2d3f52;
+    --color-fm-primary-strong:    #1c2835;
+    --color-fm-secondary:         #c6d0d9;
+    --color-fm-accent:            #8a4a2a;
+    --color-fm-highlight:         #e9c84a;
+    --color-fm-ink:               #1a1d21;
+    --color-fm-web-bg:            #ffffff;
+    --color-fm-web-surface:       #ffffff;
+    --color-fm-web-surface-sunk:  #f4f6f7;
+    --color-fm-web-hairline:      #d7dde2;
+    --color-fm-web-text:          #1a1d21;
+    --color-fm-web-text-soft:     #4f565e;
+    --color-fm-web-text-mute:     #646c75;
+    --color-fm-web-clay-text:     #8a5638;
+    --color-fm-web-primary-deep:  #33485e;
+    --color-fm-web-primary:       #6b7f93;
+    --color-fm-web-primary-tint:  #eaeef2;
+    --fm-color-surface:           #ffffff;
+    --fm-color-on-primary:        #ffffff;
+    --fm-color-on-secondary:      #1a1d21;
+  }
+
+  [data-fm-theme="notebook"] {
+    /* Notebook — warm paper and editorial ink */
+    color-scheme: light;
+    --color-fm-primary:           #1f4a6d;
+    --color-fm-primary-strong:    #14324a;
+    --color-fm-secondary:         #a8bfd0;
+    --color-fm-accent:            #9a4a1c;
+    --color-fm-highlight:         #e8c44a;
+    --color-fm-ink:               #33302b;
+    --color-fm-web-bg:            #f4ede0;
+    --color-fm-web-surface:       #fbf6ec;
+    --color-fm-web-surface-sunk:  #ece2d0;
+    --color-fm-web-hairline:      #d8cdb8;
+    --color-fm-web-text:          #33302b;
+    --color-fm-web-text-soft:     #5b554c;
+    --color-fm-web-text-mute:     #6b6456;
+    --color-fm-web-clay-text:     #9a4a1c;
+    --color-fm-web-primary-deep:  #245a80;
+    --color-fm-web-primary:       #8aa7bd;
+    --color-fm-web-primary-tint:  #dde6ed;
+    --fm-color-surface:           #fbf6ec;
+    --fm-color-on-primary:        #ffffff;
+    --fm-color-on-secondary:      #33302b;
+  }
+
+  /* --- Dark ---------------------------------------------------------------
+     Follows the viewer's system setting unless data-fm-scheme pins it.
+     The media block is guarded with :not([data-fm-scheme="light"]) so an
+     explicit light choice wins over the system preference; the explicit
+     dark blocks below repeat the values so the toggle wins in both
+     directions. Every theme carries its own dark palette — dark is a
+     property of the theme, not a filter applied on top of it. */
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-fm-scheme="light"]), [data-fm-theme="tool"]:not([data-fm-scheme="light"]) {
+      color-scheme: dark;
+      --color-fm-primary:           #6fa8cf;
+      --color-fm-primary-strong:    #9cc6e2;
+      --color-fm-secondary:         #33566e;
+      --color-fm-accent:            #d98a5a;
+      --color-fm-highlight:         #ffd84d;
+      --color-fm-ink:               #e6ebf1;
+      --color-fm-web-bg:            #12161b;
+      --color-fm-web-surface:       #1b2026;
+      --color-fm-web-surface-sunk:  #0e1217;
+      --color-fm-web-hairline:      #2d353e;
+      --color-fm-web-text:          #e6ebf1;
+      --color-fm-web-text-soft:     #a9b3bf;
+      --color-fm-web-text-mute:     #8d97a3;
+      --color-fm-web-clay-text:     #d39a78;
+      --color-fm-web-primary-deep:  #8cbde0;
+      --color-fm-web-primary:       #4d7d9e;
+      --color-fm-web-primary-tint:  #1e2c38;
+      --fm-color-surface:           #1b2026;
+      --fm-color-on-primary:        #0e1319;
+      --fm-color-on-secondary:      #e6ebf1;
+    }
+
+    [data-fm-theme="report"]:not([data-fm-scheme="light"]) {
+      color-scheme: dark;
+      --color-fm-primary:           #9db4c9;
+      --color-fm-primary-strong:    #c2d2e0;
+      --color-fm-secondary:         #2f3d4a;
+      --color-fm-accent:            #d2926e;
+      --color-fm-highlight:         #e9c84a;
+      --color-fm-ink:               #e8ebee;
+      --color-fm-web-bg:            #111417;
+      --color-fm-web-surface:       #1a1e22;
+      --color-fm-web-surface-sunk:  #0d1013;
+      --color-fm-web-hairline:      #2b3138;
+      --color-fm-web-text:          #e8ebee;
+      --color-fm-web-text-soft:     #a6aeb6;
+      --color-fm-web-text-mute:     #8b939b;
+      --color-fm-web-clay-text:     #cf9b7c;
+      --color-fm-web-primary-deep:  #a8bccd;
+      --color-fm-web-primary:       #5c6e80;
+      --color-fm-web-primary-tint:  #1d262e;
+      --fm-color-surface:           #1a1e22;
+      --fm-color-on-primary:        #11151a;
+      --fm-color-on-secondary:      #e8ebee;
+    }
+
+    [data-fm-theme="notebook"]:not([data-fm-scheme="light"]) {
+      color-scheme: dark;
+      --color-fm-primary:           #86b6d6;
+      --color-fm-primary-strong:    #a9cde6;
+      --color-fm-secondary:         #3c4a56;
+      --color-fm-accent:            #dba06a;
+      --color-fm-highlight:         #e8c44a;
+      --color-fm-ink:               #e6ddcd;
+      --color-fm-web-bg:            #221e19;
+      --color-fm-web-surface:       #2b2620;
+      --color-fm-web-surface-sunk:  #1a1713;
+      --color-fm-web-hairline:      #413a30;
+      --color-fm-web-text:          #e6ddcd;
+      --color-fm-web-text-soft:     #b3a991;
+      --color-fm-web-text-mute:     #9e957f;
+      --color-fm-web-clay-text:     #dba06a;
+      --color-fm-web-primary-deep:  #8fbcda;
+      --color-fm-web-primary:       #4f6c83;
+      --color-fm-web-primary-tint:  #25313b;
+      --fm-color-surface:           #2b2620;
+      --fm-color-on-primary:        #161310;
+      --fm-color-on-secondary:      #e6ddcd;
+    }
+
+  }
+
+  :root[data-fm-scheme="dark"], [data-fm-theme="tool"][data-fm-scheme="dark"] {
+    color-scheme: dark;
+    --color-fm-primary:           #6fa8cf;
+    --color-fm-primary-strong:    #9cc6e2;
+    --color-fm-secondary:         #33566e;
+    --color-fm-accent:            #d98a5a;
+    --color-fm-highlight:         #ffd84d;
+    --color-fm-ink:               #e6ebf1;
+    --color-fm-web-bg:            #12161b;
+    --color-fm-web-surface:       #1b2026;
+    --color-fm-web-surface-sunk:  #0e1217;
+    --color-fm-web-hairline:      #2d353e;
+    --color-fm-web-text:          #e6ebf1;
+    --color-fm-web-text-soft:     #a9b3bf;
+    --color-fm-web-text-mute:     #8d97a3;
+    --color-fm-web-clay-text:     #d39a78;
+    --color-fm-web-primary-deep:  #8cbde0;
+    --color-fm-web-primary:       #4d7d9e;
+    --color-fm-web-primary-tint:  #1e2c38;
+    --fm-color-surface:           #1b2026;
+    --fm-color-on-primary:        #0e1319;
+    --fm-color-on-secondary:      #e6ebf1;
+  }
+
+  [data-fm-theme="report"][data-fm-scheme="dark"] {
+    color-scheme: dark;
+    --color-fm-primary:           #9db4c9;
+    --color-fm-primary-strong:    #c2d2e0;
+    --color-fm-secondary:         #2f3d4a;
+    --color-fm-accent:            #d2926e;
+    --color-fm-highlight:         #e9c84a;
+    --color-fm-ink:               #e8ebee;
+    --color-fm-web-bg:            #111417;
+    --color-fm-web-surface:       #1a1e22;
+    --color-fm-web-surface-sunk:  #0d1013;
+    --color-fm-web-hairline:      #2b3138;
+    --color-fm-web-text:          #e8ebee;
+    --color-fm-web-text-soft:     #a6aeb6;
+    --color-fm-web-text-mute:     #8b939b;
+    --color-fm-web-clay-text:     #cf9b7c;
+    --color-fm-web-primary-deep:  #a8bccd;
+    --color-fm-web-primary:       #5c6e80;
+    --color-fm-web-primary-tint:  #1d262e;
+    --fm-color-surface:           #1a1e22;
+    --fm-color-on-primary:        #11151a;
+    --fm-color-on-secondary:      #e8ebee;
+  }
+
+  [data-fm-theme="notebook"][data-fm-scheme="dark"] {
+    color-scheme: dark;
+    --color-fm-primary:           #86b6d6;
+    --color-fm-primary-strong:    #a9cde6;
+    --color-fm-secondary:         #3c4a56;
+    --color-fm-accent:            #dba06a;
+    --color-fm-highlight:         #e8c44a;
+    --color-fm-ink:               #e6ddcd;
+    --color-fm-web-bg:            #221e19;
+    --color-fm-web-surface:       #2b2620;
+    --color-fm-web-surface-sunk:  #1a1713;
+    --color-fm-web-hairline:      #413a30;
+    --color-fm-web-text:          #e6ddcd;
+    --color-fm-web-text-soft:     #b3a991;
+    --color-fm-web-text-mute:     #9e957f;
+    --color-fm-web-clay-text:     #dba06a;
+    --color-fm-web-primary-deep:  #8fbcda;
+    --color-fm-web-primary:       #4f6c83;
+    --color-fm-web-primary-tint:  #25313b;
+    --fm-color-surface:           #2b2620;
+    --fm-color-on-primary:        #161310;
+    --fm-color-on-secondary:      #e6ddcd;
+  }
+
+  /* --- Density ------------------------------------------------------------
+     One axis, applied to the spacing scale, so it propagates everywhere
+     instead of needing a modifier per component. Declared after the themes
+     and at equal specificity, so an explicit data-fm-density always beats
+     the density a theme prefers. */
+
+  [data-fm-density="normal"] {
+    --fm-space-1: 0.25rem;  --fm-space-2: 0.5rem;   --fm-space-3: 1rem;
+    --fm-space-4: 1.5rem;   --fm-space-5: 2rem;     --fm-space-6: 3rem;
+  }
+
+  [data-fm-density="compact"] {
+    --fm-space-1: 0.2rem;   --fm-space-2: 0.4rem;   --fm-space-3: 0.75rem;
+    --fm-space-4: 1.1rem;   --fm-space-5: 1.5rem;   --fm-space-6: 2.2rem;
+  }
+
+  [data-fm-density="dense"] {
+    --fm-space-1: 0.15rem;  --fm-space-2: 0.3rem;   --fm-space-3: 0.6rem;
+    --fm-space-4: 0.85rem;  --fm-space-5: 1.15rem;  --fm-space-6: 1.6rem;
   }
 }
 
@@ -2460,80 +2748,83 @@
 }
 
 /* === High-contrast mode — hand-written component overrides =================
-   Switched on with .fm-mode-hc on <body> or any ancestor. The palette is
-   ink + highlight + accent, all drawn from the existing brand tokens — no
-   separate --fm-*-hc tokens are needed. */
+   Switched on with .fm-mode-hc on <body> or any ancestor.
+
+   The palette comes from --fm-hc-surface / --fm-hc-text / --fm-hc-accent,
+   which are fixed and sit OUTSIDE the theme system on purpose. High contrast
+   is an accessibility mode, not a look: it has to resolve to the same
+   deterministic pair under every theme and colour scheme. */
 
 .fm-mode-hc body,
 .fm-mode-hc {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-header {
-  background: var(--fm-color-ink);
-  border-bottom-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  border-bottom-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-header__wordmark,
 .fm-mode-hc .fm-header__nav-list a {
-  color: var(--fm-color-highlight);
+  color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-callout {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-left-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-left-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-panel,
 .fm-mode-hc .fm-metric-card {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-metric-card__num,
 .fm-mode-hc .fm-metric-card__label {
-  color: var(--fm-color-highlight);
+  color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-btn--primary {
-  background: var(--fm-color-highlight);
-  color: var(--fm-color-ink);
-  border-color: var(--fm-color-ink);
+  background: var(--fm-hc-text);
+  color: var(--fm-hc-surface);
+  border-color: var(--fm-hc-surface);
 }
 
 .fm-mode-hc .fm-btn--secondary {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-tag--neutral,
 .fm-mode-hc .fm-tag--info,
 .fm-mode-hc .fm-tag--required,
 .fm-mode-hc .fm-tag--risk {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border: 1px solid var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border: 1px solid var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-tab.is-active {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  box-shadow: inset 0 -3px 0 var(--fm-color-accent);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  box-shadow: inset 0 -3px 0 var(--fm-hc-accent);
 }
 
 .fm-mode-hc .fm-switch-btn.is-active {
-  background: var(--fm-color-highlight);
-  color: var(--fm-color-ink);
-  border-color: var(--fm-color-ink);
+  background: var(--fm-hc-text);
+  color: var(--fm-hc-surface);
+  border-color: var(--fm-hc-surface);
 }
 
 .fm-mode-hc .fm-skiplink {
-  background: var(--fm-color-highlight);
-  color: var(--fm-color-ink);
+  background: var(--fm-hc-text);
+  color: var(--fm-hc-surface);
 }
 
 /* High contrast for the form primitives: ink + highlight, accent for errors. */
@@ -2541,29 +2832,29 @@
 .fm-mode-hc .fm-input,
 .fm-mode-hc .fm-select,
 .fm-mode-hc .fm-textarea {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-input::placeholder,
 .fm-mode-hc .fm-textarea::placeholder {
-  color: color-mix(in srgb, var(--fm-color-highlight) 70%, transparent);
+  color: color-mix(in srgb, var(--fm-hc-text) 70%, transparent);
 }
 
 .fm-mode-hc .fm-input:focus-visible,
 .fm-mode-hc .fm-select:focus-visible,
 .fm-mode-hc .fm-textarea:focus-visible {
-  border-color: var(--fm-color-highlight);
+  border-color: var(--fm-hc-text);
   box-shadow: 0 0 0 3px color-mix(in srgb,
-              var(--fm-color-highlight) 50%, transparent);
+              var(--fm-hc-text) 50%, transparent);
 }
 
 .fm-mode-hc .fm-input:disabled,
 .fm-mode-hc .fm-select:disabled,
 .fm-mode-hc .fm-textarea:disabled {
-  background: color-mix(in srgb, var(--fm-color-ink) 70%, black);
-  color: color-mix(in srgb, var(--fm-color-highlight) 50%, transparent);
+  background: color-mix(in srgb, var(--fm-hc-surface) 70%, black);
+  color: color-mix(in srgb, var(--fm-hc-text) 50%, transparent);
 }
 
 .fm-mode-hc .fm-input[aria-invalid="true"],
@@ -2572,7 +2863,7 @@
 .fm-mode-hc .fm-select.is-invalid,
 .fm-mode-hc .fm-textarea[aria-invalid="true"],
 .fm-mode-hc .fm-textarea.is-invalid {
-  border-color: var(--fm-color-accent);
+  border-color: var(--fm-hc-accent);
 }
 
 .fm-mode-hc .fm-select {
@@ -2581,43 +2872,43 @@
 
 .fm-mode-hc .fm-checkbox,
 .fm-mode-hc .fm-radio {
-  accent-color: var(--fm-color-highlight);
+  accent-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-check,
 .fm-mode-hc .fm-field__label {
-  color: var(--fm-color-highlight);
+  color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-field__hint {
-  color: color-mix(in srgb, var(--fm-color-highlight) 80%, transparent);
+  color: color-mix(in srgb, var(--fm-hc-text) 80%, transparent);
 }
 
 .fm-mode-hc .fm-field__error {
-  color: var(--fm-color-accent);
+  color: var(--fm-hc-accent);
 }
 
 .fm-mode-hc .fm-range::-webkit-slider-runnable-track {
-  background: color-mix(in srgb, var(--fm-color-highlight) 30%, transparent);
+  background: color-mix(in srgb, var(--fm-hc-text) 30%, transparent);
 }
 .fm-mode-hc .fm-range::-moz-range-track {
-  background: color-mix(in srgb, var(--fm-color-highlight) 30%, transparent);
+  background: color-mix(in srgb, var(--fm-hc-text) 30%, transparent);
 }
 .fm-mode-hc .fm-range::-webkit-slider-thumb {
-  background: var(--fm-color-highlight);
-  border-color: var(--fm-color-ink);
+  background: var(--fm-hc-text);
+  border-color: var(--fm-hc-surface);
 }
 .fm-mode-hc .fm-range::-moz-range-thumb {
-  background: var(--fm-color-highlight);
-  border-color: var(--fm-color-ink);
+  background: var(--fm-hc-text);
+  border-color: var(--fm-hc-surface);
 }
 
 /* High contrast for the modal. */
 
 .fm-mode-hc .fm-modal {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border: 2px solid var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border: 2px solid var(--fm-hc-text);
   box-shadow: none;
 }
 
@@ -2627,18 +2918,18 @@
 
 .fm-mode-hc .fm-modal__head,
 .fm-mode-hc .fm-modal__actions {
-  border-color: var(--fm-color-highlight);
-  background: var(--fm-color-ink);
+  border-color: var(--fm-hc-text);
+  background: var(--fm-hc-surface);
 }
 
 .fm-mode-hc .fm-modal__title,
 .fm-mode-hc .fm-modal__close {
-  color: var(--fm-color-highlight);
+  color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-modal__close:hover {
-  background: color-mix(in srgb, var(--fm-color-highlight) 14%, transparent);
-  color: var(--fm-color-highlight);
+  background: color-mix(in srgb, var(--fm-hc-text) 14%, transparent);
+  color: var(--fm-hc-text);
 }
 
 /* High contrast for the callout modifiers. */
@@ -2649,15 +2940,15 @@
 .fm-mode-hc .fm-callout--danger,
 .fm-mode-hc .fm-callout--success,
 .fm-mode-hc .fm-callout--legal {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-left-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-left-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-callout--warn,
 .fm-mode-hc .fm-callout--error,
 .fm-mode-hc .fm-callout--danger {
-  border-left-color: var(--fm-color-accent);
+  border-left-color: var(--fm-hc-accent);
 }
 
 /* High contrast for the tag modifiers (--ok/--success/--warn/--error/--danger). */
@@ -2667,23 +2958,23 @@
 .fm-mode-hc .fm-tag--warn,
 .fm-mode-hc .fm-tag--error,
 .fm-mode-hc .fm-tag--danger {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border: 1px solid var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border: 1px solid var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-tag--error,
 .fm-mode-hc .fm-tag--danger {
-  border-color: var(--fm-color-accent);
-  color: var(--fm-color-accent);
+  border-color: var(--fm-hc-accent);
+  color: var(--fm-hc-accent);
 }
 
 /* High contrast for .fm-mark — inverted (highlight on ink) so a search hit
    stays visible in the HC palette. */
 .fm-mode-hc :where(mark),
 .fm-mode-hc .fm-mark {
-  background: var(--fm-color-highlight);
-  color: var(--fm-color-ink);
+  background: var(--fm-hc-text);
+  color: var(--fm-hc-surface);
 }
 
 /* High contrast for .fm-table — ink on highlight, no zebra (too restless in
@@ -2691,76 +2982,76 @@
    swap colours. */
 
 .fm-mode-hc .fm-table {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-table th,
 .fm-mode-hc .fm-table td {
-  border-bottom-color: var(--fm-color-highlight);
+  border-bottom-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-table thead th {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-bottom: 2px solid var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-bottom: 2px solid var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-table tfoot td {
-  background: color-mix(in srgb, var(--fm-color-ink) 70%, black);
-  color: var(--fm-color-highlight);
-  border-top-color: var(--fm-color-highlight);
+  background: color-mix(in srgb, var(--fm-hc-surface) 70%, black);
+  color: var(--fm-hc-text);
+  border-top-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-table tbody tr:hover {
-  background: color-mix(in srgb, var(--fm-color-highlight) 18%, var(--fm-color-ink));
+  background: color-mix(in srgb, var(--fm-hc-text) 18%, var(--fm-hc-surface));
 }
 
 .fm-mode-hc .fm-table--zebra tbody tr:nth-child(even) {
-  background: color-mix(in srgb, var(--fm-color-highlight) 8%, var(--fm-color-ink));
+  background: color-mix(in srgb, var(--fm-hc-text) 8%, var(--fm-hc-surface));
 }
 
 .fm-mode-hc .fm-table--sticky-col tbody td:first-child,
 .fm-mode-hc .fm-table--sticky-col tfoot td:first-child {
-  background: var(--fm-color-ink);
+  background: var(--fm-hc-surface);
 }
 
 .fm-mode-hc .fm-table--sticky-col thead th:first-child {
-  background: var(--fm-color-ink);
+  background: var(--fm-hc-surface);
 }
 
 .fm-mode-hc .fm-table__sortable.is-active::after {
-  color: var(--fm-color-accent);
+  color: var(--fm-hc-accent);
 }
 
 .fm-mode-hc .fm-table-scroll {
-  border-color: var(--fm-color-highlight);
+  border-color: var(--fm-hc-text);
 }
 
 /* High contrast for .fm-dropzone — highlight border on ink, accent border in
    the error state. */
 
 .fm-mode-hc .fm-dropzone {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-dropzone:hover,
 .fm-mode-hc .fm-dropzone.is-dragover {
-  background: color-mix(in srgb, var(--fm-color-highlight) 12%, var(--fm-color-ink));
-  border-color: var(--fm-color-highlight);
+  background: color-mix(in srgb, var(--fm-hc-text) 12%, var(--fm-hc-surface));
+  border-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-dropzone.is-error {
-  border-color: var(--fm-color-accent);
-  color: var(--fm-color-accent);
-  background: var(--fm-color-ink);
+  border-color: var(--fm-hc-accent);
+  color: var(--fm-hc-accent);
+  background: var(--fm-hc-surface);
 }
 
 .fm-mode-hc .fm-dropzone__icon,
 .fm-mode-hc .fm-dropzone__hint {
-  color: var(--fm-color-highlight);
+  color: var(--fm-hc-text);
 }
 
 /* High contrast for .fm-toast / .fm-toaster — ink + highlight, accent for
@@ -2771,33 +3062,33 @@
 .fm-mode-hc .fm-toast--success,
 .fm-mode-hc .fm-toast--warn,
 .fm-mode-hc .fm-toast--error {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-left-color: var(--fm-color-highlight);
-  box-shadow: 0 0 0 1px var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-left-color: var(--fm-hc-text);
+  box-shadow: 0 0 0 1px var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-toast--warn,
 .fm-mode-hc .fm-toast--error {
-  border-left-color: var(--fm-color-accent);
+  border-left-color: var(--fm-hc-accent);
 }
 
 /* High contrast for .fm-toolbar — ink with a highlight border. No accent
    shadow: shadows are invisible in the HC palette. */
 
 .fm-mode-hc .fm-toolbar {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-color: var(--fm-color-highlight);
-  box-shadow: 0 -1px 0 var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-color: var(--fm-hc-text);
+  box-shadow: 0 -1px 0 var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-toolbar--top {
-  box-shadow: 0 1px 0 var(--fm-color-highlight);
+  box-shadow: 0 1px 0 var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-toolbar__count {
-  color: var(--fm-color-highlight);
+  color: var(--fm-hc-text);
 }
 
 /* High contrast for .fm-search — ink + highlight; the active item inverts to
@@ -2805,52 +3096,52 @@
    inversion. */
 
 .fm-mode-hc .fm-search__overlay {
-  background: var(--fm-color-ink);
-  border-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  border-color: var(--fm-hc-text);
   box-shadow: none;
 }
 
 .fm-mode-hc .fm-search__count {
-  color: var(--fm-color-highlight);
-  border-bottom-color: var(--fm-color-highlight);
+  color: var(--fm-hc-text);
+  border-bottom-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-search__item,
 .fm-mode-hc .fm-search__item-title,
 .fm-mode-hc .fm-search__item-excerpt,
 .fm-mode-hc .fm-search__state {
-  color: var(--fm-color-highlight);
+  color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-search__item:hover,
 .fm-mode-hc .fm-search__item.is-active {
-  background: color-mix(in srgb, var(--fm-color-highlight) 18%, var(--fm-color-ink));
+  background: color-mix(in srgb, var(--fm-hc-text) 18%, var(--fm-hc-surface));
 }
 
 .fm-mode-hc .fm-search__item.is-active {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fm-color-highlight) 50%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fm-hc-text) 50%, transparent);
 }
 
 .fm-mode-hc .fm-search__item-badge {
-  background: color-mix(in srgb, var(--fm-color-highlight) 14%, var(--fm-color-ink));
-  color: var(--fm-color-highlight);
+  background: color-mix(in srgb, var(--fm-hc-text) 14%, var(--fm-hc-surface));
+  color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-search-trigger {
-  background: var(--fm-color-ink);
-  color: var(--fm-color-highlight);
-  border-color: var(--fm-color-highlight);
+  background: var(--fm-hc-surface);
+  color: var(--fm-hc-text);
+  border-color: var(--fm-hc-text);
 }
 
 .fm-mode-hc .fm-search-trigger:focus-visible {
-  border-color: var(--fm-color-highlight);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fm-color-highlight) 50%, transparent);
+  border-color: var(--fm-hc-text);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fm-hc-text) 50%, transparent);
 }
 
 .fm-mode-hc .fm-search-trigger__kbd {
-  background: color-mix(in srgb, var(--fm-color-highlight) 14%, var(--fm-color-ink));
-  color: var(--fm-color-highlight);
-  border-color: var(--fm-color-highlight);
+  background: color-mix(in srgb, var(--fm-hc-text) 14%, var(--fm-hc-surface));
+  color: var(--fm-hc-text);
+  border-color: var(--fm-hc-text);
 }
 
 /* === Patterns =============================================================
@@ -2881,7 +3172,42 @@
   }
 }
 
+@page {
+  size: A4;
+  margin: 18mm 16mm;
+}
+
 @media print {
+  /* Print is always light and always quiet, whatever theme or colour scheme
+     the screen was using. Without this a dark theme prints dark — which wastes
+     toner, and on most printers comes out unreadable. Resetting the TOKENS
+     rather than a handful of components is what makes that hold for every
+     component, including ones added later. */
+  :root,
+  [data-fm-theme] {
+    color-scheme: light;
+    --color-fm-primary:              #2d3f52;
+    --color-fm-primary-strong:       #1c2835;
+    --color-fm-secondary:            #c6d0d9;
+    --color-fm-accent:               #8a4a2a;
+    --color-fm-highlight:            #e9c84a;
+    --color-fm-ink:                  #1a1d21;
+    --color-fm-web-bg:               #ffffff;
+    --color-fm-web-surface:          #ffffff;
+    --color-fm-web-surface-sunk:     #f4f6f7;
+    --color-fm-web-hairline:         #d7dde2;
+    --color-fm-web-text:             #1a1d21;
+    --color-fm-web-text-soft:        #4f565e;
+    --color-fm-web-text-mute:        #646c75;
+    --color-fm-web-clay-text:        #8a5638;
+    --color-fm-web-primary-deep:     #33485e;
+    --color-fm-web-primary:          #6b7f93;
+    --color-fm-web-primary-tint:     #eaeef2;
+    --fm-color-surface:              #ffffff;
+    --fm-color-on-primary:           #ffffff;
+    --fm-color-on-secondary:         #1a1d21;
+  }
+
   body {
     background: #ffffff;
     color: #000000;
