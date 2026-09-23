@@ -12,7 +12,7 @@
  *
  * Delivered as:
  *   import { createSearch }
- *     from 'https://flomotlik.github.io/design-system/fm-search.js';
+ *     from 'https://design-system.flomotlik.me/fm-search.js';
  *
  *   const controller = createSearch({
  *     input: '#search',

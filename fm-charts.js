@@ -6,7 +6,7 @@
  *   import { PALETTE, INK, LABEL_SIZE, AXIS_SIZE,
  *            BAR_MAX_DENSE, BAR_MAX_WIDE, PATTERN_DECAL,
  *            tip, legend, grid, planActualSeries }
- *     from 'https://flomotlik.github.io/design-system/fm-charts.js';
+ *     from 'https://design-system.flomotlik.me/fm-charts.js';
  *
  * ECharts itself is not bundled here — load it yourself. This module ships
  * no third-party code.
