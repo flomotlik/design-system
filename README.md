@@ -84,14 +84,23 @@ Three independent axes, which compose:
 | Attribute | Values | Does |
 |---|---|---|
 | `data-fm-theme` | `tool` · `report` · `notebook` | The palette and its dark counterpart |
-| `data-fm-scheme` | `light` · `dark` | Pins the colour scheme. Omit to follow the viewer's system setting |
+| `data-fm-scheme` | `light` · `dark` · `system` | Light unless you say otherwise; `system` opts in to `prefers-color-scheme` |
 | `data-fm-density` | `normal` · `compact` · `dense` | Tightens the spacing scale, so it reaches every component at once |
 
 A theme carries a preferred density; an explicit `data-fm-density` still wins.
 
-Every theme has its own dark palette rather than a filter applied on top.
-Without `data-fm-scheme` the page follows `prefers-color-scheme`; with it, the
-choice wins in both directions.
+**Dark is never automatic.** The default is light, including when the viewer's
+system is set to dark — the one place this system deliberately overrides a
+stated system preference.
+
+These are tools that exist to show numbers. On a dark ground thin numeric
+glyphs and chart fills lose contrast, and light-on-dark text blooms for
+astigmatic readers, which is exactly the dense material people most need to
+read accurately. Dark is still there, measured and complete, with its own
+palette per theme — it is opted into with `data-fm-scheme="dark"`, or
+`data-fm-scheme="system"` to follow `prefers-color-scheme` after all. For a
+reading surface rather than a data surface, that is a reasonable switch to
+flip.
 
 The selectors are plain attribute selectors, so a theme can be scoped to a
 subtree — useful for a preview pane or a side-by-side comparison.

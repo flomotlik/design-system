@@ -197,9 +197,9 @@
       </div>
       <div class="fm-switcher">
         <span class="fm-switcher__label">Scheme</span>
-        <button type="button" class="fm-switch-btn is-active" data-set="scheme" data-val="system">System</button>
-        <button type="button" class="fm-switch-btn" data-set="scheme" data-val="light">Light</button>
+        <button type="button" class="fm-switch-btn is-active" data-set="scheme" data-val="light">Light</button>
         <button type="button" class="fm-switch-btn" data-set="scheme" data-val="dark">Dark</button>
+        <button type="button" class="fm-switch-btn" data-set="scheme" data-val="system">Follow system</button>
       </div>
       <div class="fm-switcher">
         <span class="fm-switcher__label">Density</span>
@@ -223,8 +223,9 @@
       }
       function apply(k, v) {
         var attr = KEYS[k];
-        // "system" means: express no opinion and let prefers-color-scheme decide.
-        if (v === 'system') root.removeAttribute(attr);
+        // Light is the default, so it needs no attribute at all. "system" is an
+        // explicit opt-in to prefers-color-scheme, not the absence of a choice.
+        if (k === 'scheme' && v === 'light') root.removeAttribute(attr);
         else root.setAttribute(attr, v);
         document.querySelectorAll('[data-set="' + k + '"]').forEach(function (b) {
           b.classList.toggle('is-active', b.dataset.val === v);
@@ -1462,7 +1463,7 @@ createSearch({
           <thead><tr><th>Attribute</th><th>Values</th><th>Does</th></tr></thead>
           <tbody>
             <tr><td><code class="doc-code">data-fm-theme</code></td><td>tool · report · notebook</td><td>The palette and its dark counterpart</td></tr>
-            <tr><td><code class="doc-code">data-fm-scheme</code></td><td>light · dark</td><td>Pins the colour scheme. Omit it to follow the viewer's system setting</td></tr>
+            <tr><td><code class="doc-code">data-fm-scheme</code></td><td>light · dark · system</td><td>Light unless you say otherwise. <code class="doc-code">system</code> opts in to <code class="doc-code">prefers-color-scheme</code></td></tr>
             <tr><td><code class="doc-code">data-fm-density</code></td><td>normal · compact · dense</td><td>Tightens the spacing scale, so it propagates to every component at once</td></tr>
           </tbody>
         </table>
@@ -1473,12 +1474,28 @@ createSearch({
       </div>
 
       <div class="doc-block">
-        <h3 class="fm-subline">Dark mode belongs to the theme</h3>
+        <h3 class="fm-subline">Dark is never automatic</h3>
         <p class="fm-prose doc-lead">
-          Every theme carries its own dark palette rather than having a filter
-          applied on top. Without <code class="doc-code">data-fm-scheme</code> the
-          page follows <code class="doc-code">prefers-color-scheme</code>; with it,
-          the choice wins in both directions.
+          The default is light, including when the viewer's system is set to
+          dark. That is deliberate, and it is the one place this system
+          overrides a stated system preference.
+        </p>
+        <p class="fm-prose doc-lead">
+          These are tools that exist to show numbers — tables, figures, charts.
+          On a dark ground thin numeric glyphs and chart fills lose contrast,
+          and light-on-dark text blooms for astigmatic readers. That is exactly
+          the dense material people most need to read accurately, so defaulting
+          a data tool into dark trades legibility for a preference nobody
+          expressed in the tool itself.
+        </p>
+        <p class="fm-prose doc-lead">
+          Dark is still there, measured and complete, and every theme carries
+          its own dark palette rather than a filter applied on top. It is opted
+          into: <code class="doc-code">data-fm-scheme="dark"</code> for always
+          dark, or <code class="doc-code">data-fm-scheme="system"</code> to
+          follow <code class="doc-code">prefers-color-scheme</code> after all.
+          If your tool is a reading surface rather than a data surface, that is
+          a reasonable thing to switch on.
         </p>
       </div>
 

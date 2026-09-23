@@ -654,15 +654,27 @@
   }
 
   /* --- Dark ---------------------------------------------------------------
-     Follows the viewer's system setting unless data-fm-scheme pins it.
-     The media block is guarded with :not([data-fm-scheme="light"]) so an
-     explicit light choice wins over the system preference; the explicit
-     dark blocks below repeat the values so the toggle wins in both
-     directions. Every theme carries its own dark palette — dark is a
-     property of the theme, not a filter applied on top of it. */
+     Dark is NEVER automatic. The default, with no data-fm-scheme at all, is
+     light — including when the viewer's system is set to dark.
+
+     That is a deliberate choice for the kind of thing this system is for.
+     These are tools that exist to show numbers: tables, figures, charts.
+     On a dark ground thin numeric glyphs and chart fills lose contrast, and
+     light-on-dark text blooms for astigmatic readers, which is exactly the
+     dense material people most need to read accurately. Defaulting a data
+     tool into dark trades legibility for a preference nobody expressed.
+
+     Dark remains available, measured and complete — it is opted into:
+
+       data-fm-scheme="dark"     always dark
+       data-fm-scheme="light"    always light (the default anyway)
+       data-fm-scheme="system"   follow prefers-color-scheme
+
+     Every theme carries its own dark palette, so dark is a property of the
+     theme rather than a filter applied on top of it. */
 
   @media (prefers-color-scheme: dark) {
-    :root:not([data-fm-scheme="light"]), [data-fm-theme="tool"]:not([data-fm-scheme="light"]) {
+    :root[data-fm-scheme="system"], [data-fm-theme="tool"][data-fm-scheme="system"] {
       color-scheme: dark;
       --color-fm-primary:           #6fa8cf;
       --color-fm-primary-strong:    #9cc6e2;
@@ -686,7 +698,7 @@
       --fm-color-on-secondary:      #e6ebf1;
     }
 
-    [data-fm-theme="report"]:not([data-fm-scheme="light"]) {
+    [data-fm-theme="report"][data-fm-scheme="system"] {
       color-scheme: dark;
       --color-fm-primary:           #9db4c9;
       --color-fm-primary-strong:    #c2d2e0;
@@ -710,7 +722,7 @@
       --fm-color-on-secondary:      #e8ebee;
     }
 
-    [data-fm-theme="notebook"]:not([data-fm-scheme="light"]) {
+    [data-fm-theme="notebook"][data-fm-scheme="system"] {
       color-scheme: dark;
       --color-fm-primary:           #86b6d6;
       --color-fm-primary-strong:    #a9cde6;
