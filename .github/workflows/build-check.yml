@@ -1,0 +1,20 @@
+name: Build drift check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --include=dev
+      - run: npm run build
+      - name: Built CSS must match the committed CSS
+        run: git diff --exit-code -- design-system.css

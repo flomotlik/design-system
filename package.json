@@ -1,0 +1,15 @@
+{
+  "name": "fm-design-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "fm design system — shared stylesheet and components for small web tools",
+  "license": "MIT",
+  "scripts": {
+    "build": "tailwindcss -i ./src/design-system.css -o ./design-system.css --minify",
+    "watch": "tailwindcss -i ./src/design-system.css -o ./design-system.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.0",
+    "tailwindcss": "^4.3.0"
+  }
+}

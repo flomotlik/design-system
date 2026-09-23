@@ -1,0 +1,178 @@
+<!doctype html>
+<!--
+  A complete minimal example of a tool consuming the design system.
+
+  It loads nothing but the hosted design-system.css from its absolute URL and
+  builds the whole interface out of the existing fm-* components. No asset of
+  its own, no build step, no framework. Copy this file as a starting point.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minimal example — fm design system</title>
+
+  <!-- Linked absolutely. A relative URL would only work locally and would not
+       reflect how the hosted stylesheet is actually consumed. -->
+  <link rel="stylesheet" href="https://design-system.flomotlik.me/design-system.css">
+
+  <style>
+    /* design-system.css deliberately sets NO tag defaults — it styles no
+       body, no h1, no bare HTML element. A consuming page therefore has to
+       set its own base layout, or it renders as serif text on white and looks
+       like the stylesheet failed to load. These four properties are the
+       minimum, and they all build on --fm-* tokens. */
+    body {
+      margin: 0;
+      background: var(--fm-color-surface);
+      color: var(--fm-color-text);
+      font-family: var(--fm-font-copy);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="fm-header">
+    <div class="fm-header__inner">
+      <a class="fm-header__brand" href="#top">
+        <!-- No logo ships with the design system. The wordmark alone is the
+             honest default; put your own <img class="fm-header__logo"> here
+             when you have one. -->
+        <span class="fm-header__wordmark">Example tool</span>
+      </a>
+      <nav class="fm-header__nav" aria-label="Main navigation">
+        <ul class="fm-header__nav-list">
+          <li><a class="fm-header__nav-current" href="#start">Start</a></li>
+          <li><a href="#data">Data</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="fm-section" id="start">
+    <div class="fm-container">
+      <h1 class="fm-headline">A small tool, built from components</h1>
+      <p class="fm-subline">
+        Everything on this page comes from the design system.
+      </p>
+      <p class="fm-prose">
+        Link the hosted stylesheet, set the four body properties above, and
+        assemble the interface from the <code>fm-</code> classes. There is
+        nothing else to install.
+      </p>
+
+      <p class="fm-prose">
+        <a class="fm-btn fm-btn--primary" href="#data">Primary action</a>
+        <a class="fm-btn fm-btn--secondary" href="#contact">Secondary action</a>
+      </p>
+
+      <article class="fm-card fm-card--primary">
+        <h3 class="fm-card__title">Primary card</h3>
+        <p class="fm-card__body">
+          A card holds a single statement. The primary variant sits on the
+          primary surface with white text.
+        </p>
+      </article>
+
+      <article class="fm-card fm-card--secondary">
+        <h3 class="fm-card__title">Secondary card</h3>
+        <p class="fm-card__body">
+          The secondary variant sits on the lighter surface with dark text.
+          Every card needs one variant modifier.
+        </p>
+      </article>
+
+      <aside class="fm-callout fm-callout--warn" style="margin-top: var(--fm-space-4);">
+        <p class="fm-prose" style="margin: 0;">
+          <strong>Note:</strong> this is the warn callout — one of five
+          semantic variants (info, warn, error, success, legal). Status
+          colours never follow a theme: warn is yellow everywhere.
+        </p>
+      </aside>
+
+      <form class="fm-field" style="margin-top: var(--fm-space-4); max-width: 26rem;"
+            onsubmit="event.preventDefault(); alert('Submitted.');">
+        <label class="fm-field__label" for="contact-email">Email address</label>
+        <input class="fm-input" id="contact-email" type="email" required
+               placeholder="name@example.com">
+        <span class="fm-field__hint">
+          A hint sits under the field, never inside it as a placeholder.
+        </span>
+        <p style="margin-top: var(--fm-space-3);">
+          <button class="fm-btn fm-btn--primary" type="submit">Submit</button>
+        </p>
+      </form>
+
+      <p style="margin-top: var(--fm-space-4);">
+        <button type="button" class="fm-btn fm-btn--secondary"
+                onclick="document.getElementById('example-modal').showModal()">
+          Open a dialog
+        </button>
+      </p>
+
+      <dialog class="fm-modal" id="example-modal">
+        <div class="fm-modal__head">
+          <h2 class="fm-modal__title">A dialog</h2>
+          <button type="button" class="fm-modal__close" aria-label="Close"
+                  onclick="this.closest('dialog').close()">×</button>
+        </div>
+        <div class="fm-modal__body">
+          <p class="fm-prose" style="margin: 0;">
+            The native &lt;dialog&gt; element with the .fm-modal class. Esc or
+            the close button dismisses it. Content and behaviour are yours;
+            the design system supplies backdrop, shadow and layout.
+          </p>
+        </div>
+        <div class="fm-modal__actions">
+          <button type="button" class="fm-btn fm-btn--secondary"
+                  onclick="this.closest('dialog').close()">Close</button>
+        </div>
+      </dialog>
+
+      <!-- Data table with zebra striping and a numeric column, inside the
+           scroll wrapper so it stays usable on a narrow viewport. -->
+      <h2 class="fm-headline" style="margin-top: var(--fm-space-6);" id="data">Budget lines</h2>
+      <div class="fm-table-scroll" style="margin-top: var(--fm-space-3);">
+        <table class="fm-table fm-table--zebra">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Owner</th>
+              <th class="fm-table__num">Amount €</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Cargo-bike sharing</td><td>Transport</td><td class="fm-table__num">42 000</td></tr>
+            <tr><td>School garden</td><td>Education</td><td class="fm-table__num">18 500</td></tr>
+            <tr><td>Energy advice</td><td>Facilities</td><td class="fm-table__num">9 200</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="2">Total</td><td class="fm-table__num">69 700</td></tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Toast demo. The lifecycle — auto-dismiss after 4s — is consumer JS
+           and deliberately kept minimal here. -->
+      <p style="margin-top: var(--fm-space-4);">
+        <button type="button" class="fm-btn fm-btn--primary"
+                onclick="(function(){
+                  var t=document.getElementById('example-toaster');
+                  var n=document.createElement('div');
+                  n.className='fm-toast fm-toast--success';
+                  n.innerHTML='&lt;div class=&quot;fm-toast__body&quot;&gt;Saved.&lt;/div&gt;'+
+                              '&lt;button type=&quot;button&quot; class=&quot;fm-toast__close&quot; aria-label=&quot;Close&quot;&gt;×&lt;/button&gt;';
+                  n.querySelector('.fm-toast__close').addEventListener('click',function(){n.remove();});
+                  t.appendChild(n);
+                  setTimeout(function(){n.remove();}, 4000);
+                })()">
+          Run an action
+        </button>
+      </p>
+      <div class="fm-toaster" id="example-toaster" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+</body>
+</html>

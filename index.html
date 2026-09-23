@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fm design system</title>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    /*
+     * Doc chrome — documentation furniture only: colour swatches, code
+     * blocks, demo frames, spacing bars. Every class here is doc-prefixed.
+     * No fm- class is defined or overridden in this block; values may use
+     * the --fm-* tokens the stylesheet provides.
+     */
+
+    html { scroll-behavior: smooth; }
+
+    /* design-system.css sets no tag defaults, so the base layout is set
+       explicitly here — otherwise this page renders serif and unspaced. */
+    body {
+      margin: 0;
+      background: var(--fm-web-bg);
+      color: var(--fm-web-text);
+      font-family: var(--fm-font-copy);
+    }
+
+    [id] { scroll-margin-top: var(--fm-space-5); }
+
+    .doc-section-alt { background: var(--fm-web-surface); }
+    .doc-block { margin-top: var(--fm-space-6); }
+    .doc-block:first-of-type { margin-top: var(--fm-space-4); }
+    .doc-lead { max-width: 46rem; color: var(--fm-web-text-soft); }
+
+    .doc-swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+      gap: var(--fm-space-3);
+      margin-top: var(--fm-space-3);
+    }
+    .doc-swatch {
+      margin: 0;
+      border: 1px solid var(--fm-web-hairline);
+      border-radius: var(--fm-web-radius-card);
+      overflow: hidden;
+      background: var(--fm-web-surface);
+    }
+    .doc-swatch__chip { height: 4.5rem; }
+    .doc-swatch__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: var(--fm-space-2);
+    }
+    .doc-swatch__hex {
+      font-family: var(--fm-font-mono);
+      font-size: var(--fm-text-small);
+      color: var(--fm-web-text-soft);
+    }
+    .doc-swatch__usage {
+      font-size: var(--fm-text-small);
+      color: var(--fm-web-text-soft);
+      line-height: 1.35;
+    }
+    .doc-swatch__ratio {
+      font-family: var(--fm-font-mono);
+      font-size: var(--fm-text-micro);
+      color: var(--fm-web-text-mute);
+    }
+
+    .doc-code {
+      font-family: var(--fm-font-mono);
+      font-size: 0.875em;
+      background: var(--fm-web-surface-sunk);
+      border: 1px solid var(--fm-web-hairline);
+      border-radius: var(--fm-web-radius-mini);
+      padding: 0.05em 0.35em;
+    }
+    .doc-codeblock {
+      font-family: var(--fm-font-mono);
+      font-size: var(--fm-text-small);
+      line-height: 1.55;
+      white-space: pre-wrap;
+      background: var(--fm-web-surface-sunk);
+      border: 1px solid var(--fm-web-hairline);
+      border-left: 3px solid var(--fm-web-primary);
+      border-radius: var(--fm-web-radius-control);
+      padding: var(--fm-space-2) var(--fm-space-3);
+      margin-top: var(--fm-space-2);
+      overflow-x: auto;
+    }
+    .doc-demo {
+      border: 1px dashed var(--fm-web-hairline);
+      border-radius: var(--fm-web-radius-card);
+      padding: var(--fm-space-3);
+      margin-top: var(--fm-space-3);
+      background: var(--fm-web-surface);
+    }
+    .doc-demo--ground { background: var(--fm-web-bg); }
+
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--fm-space-3);
+      font-size: var(--fm-text-small);
+    }
+    .doc-table th, .doc-table td {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--fm-web-hairline);
+      vertical-align: top;
+    }
+    .doc-table th { color: var(--fm-web-text-soft); font-weight: 600; }
+
+    .doc-specimen {
+      display: flex;
+      align-items: baseline;
+      gap: var(--fm-space-3);
+      padding: var(--fm-space-2) 0;
+      border-bottom: 1px solid var(--fm-web-hairline);
+      flex-wrap: wrap;
+    }
+    .doc-specimen__label {
+      font-family: var(--fm-font-mono);
+      font-size: var(--fm-text-micro);
+      color: var(--fm-web-text-mute);
+      min-width: 16rem;
+    }
+    .doc-bar {
+      background: var(--fm-web-primary);
+      height: 0.85rem;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .doc-toc { columns: 2; column-gap: var(--fm-space-5); margin: 0; padding-left: 1.1rem; }
+    .doc-toc li { margin-bottom: 0.3rem; break-inside: avoid; }
+    .doc-placeholder {
+      background: var(--fm-web-primary-tint);
+      border: 1px solid var(--fm-web-primary);
+      border-radius: var(--fm-web-radius-mini);
+      padding: var(--fm-space-2);
+      font-size: var(--fm-text-small);
+      color: var(--fm-web-text-soft);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip link: the first interactive element for keyboard users. -->
+  <a class="fm-skiplink" href="#main">Skip to content</a>
+
+  <!-- The page header IS the live example of .fm-header. No logo file ships
+       with the design system, so the wordmark stands alone here. -->
+  <header class="fm-header">
+    <div class="fm-header__inner">
+      <a class="fm-header__brand" href="#top" aria-label="fm design system — top of page">
+        <span class="fm-header__wordmark">fm design system</span>
+      </a>
+      <nav class="fm-header__nav" aria-label="Section navigation">
+        <ul class="fm-header__nav-list">
+          <li><a href="#colour">Colour</a></li>
+          <li><a href="#type">Type</a></li>
+          <li><a href="#layout">Layout</a></li>
+          <li><a href="#components">Components</a></li>
+          <li><a href="#theming">Theming</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+  <section class="fm-section" id="top">
+    <div class="fm-container">
+      <h1 class="fm-headline">fm design system</h1>
+      <p class="fm-subline doc-lead">
+        Colour, typography, layout and UI components for small web tools.
+        One stylesheet, no build step.
+      </p>
+      <p class="fm-prose doc-lead">
+        This page is the reference and the demo at once: every example below is
+        live markup using the real components, not a screenshot. It documents
+        the full vocabulary of
+        <code class="doc-code">design-system.css</code>, plus the two ES
+        modules for charts and search.
+      </p>
+
+      <div class="doc-codeblock">&lt;link rel="stylesheet" href="https://design-system.flomotlik.me/design-system.css"&gt;</div>
+
+      <aside class="fm-callout fm-callout--info" style="margin-top: var(--fm-space-4);">
+        <p class="fm-callout__lead">The four lines everybody forgets</p>
+        <p class="fm-prose" style="margin: 0;">
+          The stylesheet deliberately styles no HTML tags — no
+          <code class="doc-code">body</code>, no <code class="doc-code">h1</code>.
+          Without your own base layout the page renders as serif text on white
+          and looks broken.
+        </p>
+        <div class="doc-codeblock">body {
+  margin: 0;
+  background: var(--fm-color-surface);
+  color: var(--fm-color-text);
+  font-family: var(--fm-font-copy);
+}</div>
+      </aside>
+
+      <div class="doc-block">
+        <h2 class="fm-headline" style="font-size: var(--fm-text-h3);">On this page</h2>
+        <ul class="doc-toc">
+          <li><a href="#colour">Colour</a></li>
+          <li><a href="#web-layer">Web layer</a></li>
+          <li><a href="#charts">Chart palette</a></li>
+          <li><a href="#type">Typography</a></li>
+          <li><a href="#layout">Layout</a></li>
+          <li><a href="#components">Header &amp; navigation</a></li>
+          <li><a href="#buttons">Buttons &amp; cards</a></li>
+          <li><a href="#content">Content components</a></li>
+          <li><a href="#data">Data components</a></li>
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#forms">Forms</a></li>
+          <li><a href="#modal">Modal</a></li>
+          <li><a href="#table">Table</a></li>
+          <li><a href="#dropzone">Dropzone</a></li>
+          <li><a href="#toast">Toast</a></li>
+          <li><a href="#toolbar">Toolbar</a></li>
+          <li><a href="#search">Search</a></li>
+          <li><a href="#hc">High contrast</a></li>
+          <li><a href="#theming">Theming</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="colour">
+    <div class="fm-container">
+      <h2 class="fm-headline">Colour</h2>
+      <p class="fm-prose doc-lead">
+        Colours are named by <strong>role</strong>, never by hue. There is no
+        <code class="doc-code">--fm-color-blue</code>. That is what lets a
+        consuming tool re-theme the system by overriding a dozen values and
+        nothing else — and it is why the names below say what a colour is
+        <em>for</em> rather than what it looks like.
+      </p>
+      <p class="fm-prose doc-lead">
+        Every ratio shown is measured, not estimated. If you change a value,
+        re-measure it and update the number in the source.
+      </p>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Brand roles</h3>
+        <p class="fm-prose doc-lead">
+          The five brand roles. <code class="doc-code">--fm-color-primary</code>
+          and <code class="doc-code">--fm-color-accent</code> carry white text,
+          so they need at least 4.5:1 against white.
+          <code class="doc-code">--fm-color-secondary</code> is a surface that
+          carries dark text and must never be used as a text colour itself.
+        </p>
+        <div class="doc-swatch-grid">
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #1f4a6d;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-color-primary</code>
+              <span class="doc-swatch__hex">#1f4a6d</span>
+              <span class="doc-swatch__usage">Primary surface and action. Carries white text.</span><span class="doc-swatch__ratio">9.30:1 on white</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #14324a;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-color-primary-strong</code>
+              <span class="doc-swatch__hex">#14324a</span>
+              <span class="doc-swatch__usage">Deepened variant for opacity stacking — stays AA at 80%.</span><span class="doc-swatch__ratio">13.25:1 on white</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #8fb4cc;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-color-secondary</code>
+              <span class="doc-swatch__hex">#8fb4cc</span>
+              <span class="doc-swatch__usage">Secondary surface. Carries dark text, never used as text itself.</span><span class="doc-swatch__ratio">7.20:1 with ink</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #9a4a1c;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-color-accent</code>
+              <span class="doc-swatch__hex">#9a4a1c</span>
+              <span class="doc-swatch__usage">Accent surface (badges). Carries white text.</span><span class="doc-swatch__ratio">6.23:1 on white</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #ffd84d;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-color-highlight</code>
+              <span class="doc-swatch__hex">#ffd84d</span>
+              <span class="doc-swatch__usage">NOT decorative — the text colour of high-contrast mode.</span><span class="doc-swatch__ratio">11.42:1 on ink</span>
+            </figcaption>
+          </figure>
+        </div>      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Neutrals</h3>
+        <div class="doc-swatch-grid">
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #1f2328;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-color-ink</code>
+              <span class="doc-swatch__hex">#1f2328</span>
+              <span class="doc-swatch__usage">Body text on light ground.</span><span class="doc-swatch__ratio">15.80:1 on white</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #ffffff;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-color-white</code>
+              <span class="doc-swatch__hex">#ffffff</span>
+              <span class="doc-swatch__usage">Base surface.</span>
+            </figcaption>
+          </figure>
+        </div>      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Semantic roles</h3>
+        <p class="fm-prose doc-lead">
+          Components reference these, not the brand tokens directly, so the
+          brand stays changeable in one place.
+        </p>
+        <table class="doc-table">
+          <thead><tr><th>Token</th><th>Resolves to</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><code class="doc-code">--fm-color-text</code></td><td><code class="doc-code">--fm-color-ink</code></td><td>Body text</td></tr>
+            <tr><td><code class="doc-code">--fm-color-surface</code></td><td><code class="doc-code">--fm-color-white</code></td><td>Base surface</td></tr>
+            <tr><td><code class="doc-code">--fm-color-on-primary</code></td><td><code class="doc-code">--fm-color-white</code></td><td>Text on the primary surface</td></tr>
+            <tr><td><code class="doc-code">--fm-color-on-secondary</code></td><td><code class="doc-code">--fm-color-ink</code></td><td>Text on the secondary surface</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="doc-block" id="status">
+        <h3 class="fm-subline">Status colours — not themeable</h3>
+        <p class="fm-prose doc-lead">
+          These three are fixed on purpose and are the one part of the palette
+          that carries <em>meaning</em> rather than identity. Green means ok
+          and red means error in every theme and every organisation.
+          Re-tinting them to match a brand destroys the signal.
+        </p>
+        <div class="doc-swatch-grid">
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #3f7d55;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-status-success</code>
+              <span class="doc-swatch__hex">#3f7d55</span>
+              <span class="doc-swatch__usage">Success. Green in every theme.</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #b78a1c;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-status-warn</code>
+              <span class="doc-swatch__hex">#b78a1c</span>
+              <span class="doc-swatch__usage">Warning. Yellow in every theme.</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #b3401e;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-status-error</code>
+              <span class="doc-swatch__hex">#b3401e</span>
+              <span class="doc-swatch__usage">Error. Red in every theme.</span>
+            </figcaption>
+          </figure>
+        </div>        <p class="fm-prose doc-lead" style="margin-top: var(--fm-space-3);">
+          The one deliberate exception is the <code class="doc-code">info</code>
+          variant, which draws its fill and border from the primary tint and
+          therefore does follow your brand.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="web-layer">
+    <div class="fm-container">
+      <h2 class="fm-headline">Web layer</h2>
+      <p class="fm-prose doc-lead">
+        A desaturated reading palette that sits alongside the brand layer, for
+        data tools with long reading stretches. Components use this layer. It
+        measures against <code class="doc-code">--fm-web-text</code>, not
+        against ink — a ratio without the text tone it was measured against is
+        worthless.
+      </p>
+        <div class="doc-swatch-grid">
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #f4f6f8;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-bg</code>
+              <span class="doc-swatch__hex">#f4f6f8</span>
+              <span class="doc-swatch__usage">Page ground for data tools.</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #ffffff;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-surface</code>
+              <span class="doc-swatch__hex">#ffffff</span>
+              <span class="doc-swatch__usage">Card and panel surface.</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #f8fafc;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-surface-sunk</code>
+              <span class="doc-swatch__hex">#f8fafc</span>
+              <span class="doc-swatch__usage">Recessed surface — tag backgrounds, filter bars.</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #dfe4ea;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-hairline</code>
+              <span class="doc-swatch__hex">#dfe4ea</span>
+              <span class="doc-swatch__usage">Borders and dividers. No text sits on it.</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #22262b;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-text</code>
+              <span class="doc-swatch__hex">#22262b</span>
+              <span class="doc-swatch__usage">Primary reading text.</span><span class="doc-swatch__ratio">14.05:1 on web-bg</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #5a616b;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-text-soft</code>
+              <span class="doc-swatch__hex">#5a616b</span>
+              <span class="doc-swatch__usage">Secondary text, sublines.</span><span class="doc-swatch__ratio">5.77:1 on web-bg</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #69707a;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-text-mute</code>
+              <span class="doc-swatch__hex">#69707a</span>
+              <span class="doc-swatch__usage">Quietest text layer. Still AA.</span><span class="doc-swatch__ratio">4.62:1 on web-bg</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #9c5a38;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-clay-text</code>
+              <span class="doc-swatch__hex">#9c5a38</span>
+              <span class="doc-swatch__usage">Warm accent text.</span><span class="doc-swatch__ratio">5.34:1 on white</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #245a80;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-primary-deep</code>
+              <span class="doc-swatch__hex">#245a80</span>
+              <span class="doc-swatch__usage">Triple duty: surface with white text, text on light, text on a 14% mix.</span><span class="doc-swatch__ratio">7.37:1 on white</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #5b8cad;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-primary</code>
+              <span class="doc-swatch__hex">#5b8cad</span>
+              <span class="doc-swatch__usage">Borders, accent rules, hover fills. No text on it.</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #e4edf4;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-primary-tint</code>
+              <span class="doc-swatch__hex">#e4edf4</span>
+              <span class="doc-swatch__usage">Soft fill — callouts, hero, hover, zebra.</span><span class="doc-swatch__ratio">12.84:1 with web-text</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #e8c44a;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-highlight</code>
+              <span class="doc-swatch__hex">#e8c44a</span>
+              <span class="doc-swatch__usage">Desaturated highlight accent for the screen layer.</span>
+            </figcaption>
+          </figure>
+        </div>    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="charts">
+    <div class="fm-container">
+      <h2 class="fm-headline">Chart palette</h2>
+      <p class="fm-prose doc-lead">
+        Eight categorical tones, low saturation, in the same order as
+        <code class="doc-code">PALETTE</code> in
+        <code class="doc-code">fm-charts.js</code>.
+      </p>
+      <p class="fm-prose doc-lead">
+        The constraint, and the reason the values look arbitrary: no two
+        entries share both a close hue and a close luminance. That keeps them
+        apart for a red-green colour-blind reader and in greyscale print. Two
+        shades of the same brand colour side by side in a stacked bar is a
+        problem, not brand consistency.
+      </p>
+        <div class="doc-swatch-grid">
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #2f6f96;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-chart-1</code>
+              <span class="doc-swatch__hex">#2f6f96</span>
+              <span class="doc-swatch__usage">Blue — primary series</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #c08a2e;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-chart-2</code>
+              <span class="doc-swatch__hex">#c08a2e</span>
+              <span class="doc-swatch__usage">Ochre</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #4e8f6d;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-chart-3</code>
+              <span class="doc-swatch__hex">#4e8f6d</span>
+              <span class="doc-swatch__usage">Green</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #a8503c;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-chart-4</code>
+              <span class="doc-swatch__hex">#a8503c</span>
+              <span class="doc-swatch__usage">Rust</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #6d5b9e;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-chart-5</code>
+              <span class="doc-swatch__hex">#6d5b9e</span>
+              <span class="doc-swatch__usage">Violet</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #4fb0ad;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-chart-6</code>
+              <span class="doc-swatch__hex">#4fb0ad</span>
+              <span class="doc-swatch__usage">Light teal</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #6b4a2e;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-chart-7</code>
+              <span class="doc-swatch__hex">#6b4a2e</span>
+              <span class="doc-swatch__usage">Brown</span>
+            </figcaption>
+          </figure>
+          <figure class="doc-swatch">
+            <div class="doc-swatch__chip" style="background: #7d838c;"></div>
+            <figcaption class="doc-swatch__meta">
+              <code class="doc-code">--fm-web-chart-8</code>
+              <span class="doc-swatch__hex">#7d838c</span>
+              <span class="doc-swatch__usage">Slate grey</span>
+            </figcaption>
+          </figure>
+        </div>
+      <div class="doc-block">
+        <p class="fm-prose doc-lead">
+          ECharts itself is loaded by you — the design system bundles no
+          third-party library. The static exports work without a DOM; the
+          functions read the tokens at call time and follow a theme override.
+        </p>
+        <div class="doc-codeblock">import { palette, ink, font, tip, legend, grid }
+  from 'https://design-system.flomotlik.me/fm-charts.js';
+
+chart.setOption({
+  color: palette(),                                   // follows --fm-web-chart-1..8
+  textStyle: { color: ink().text, fontFamily: font() },
+  tooltip: tip(),
+  legend: legend(),
+  grid: grid(),
+});</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="type">
+    <div class="fm-container">
+      <h2 class="fm-headline">Typography</h2>
+      <p class="fm-prose doc-lead">
+        Five type tokens, a modular size scale (base 1rem, ratio 1.25) and two
+        line-height multipliers. Inter carries body and UI, Spectral the
+        editorial emphasis, JetBrains Mono code and figures. Caveat exists for
+        marginalia only and must never be used for body text.
+      </p>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Families</h3>
+        <table class="doc-table">
+          <thead><tr><th>Token</th><th>Family</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><code class="doc-code">--fm-font-headline</code></td><td>Inter</td><td>Headlines and UI labels</td></tr>
+            <tr><td><code class="doc-code">--fm-font-copy</code></td><td>Inter</td><td>Body text and UI</td></tr>
+            <tr><td><code class="doc-code">--fm-font-emphasis</code></td><td>Spectral</td><td>Editorial emphasis (<code class="doc-code">.fm-emphasis</code>)</td></tr>
+            <tr><td><code class="doc-code">--fm-font-mono</code></td><td>JetBrains Mono</td><td>Code, figures, captions</td></tr>
+            <tr><td><code class="doc-code">--fm-font-hand</code></td><td>Caveat</td><td>Marginalia only — never body text</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Type classes</h3>
+        <p class="fm-prose doc-lead">
+          Each class sets family, size, line height and text colour — never a
+          background.
+        </p>
+        <div class="doc-demo">
+          <h2 class="fm-headline">A headline carries the page</h2>
+          <p class="fm-subline">A subline sits under it and adds one sentence of context.</p>
+          <p class="fm-prose">
+            Body text carries the detail. It uses the wider copy line height of
+            1.3 so longer paragraphs stay readable across several lines.
+          </p>
+          <p class="fm-emphasis">Emphasis sets a line in the serif face, for a pulled-out statement.</p>
+          <p class="fm-prose">
+            Inline atoms: <span class="fm-highlight">highlight</span>,
+            <span class="fm-underline">underline</span> and
+            <mark class="fm-mark">a search hit</mark>.
+          </p>
+        </div>
+        <div class="doc-codeblock">&lt;h2 class="fm-headline"&gt;A headline carries the page&lt;/h2&gt;
+&lt;p class="fm-subline"&gt;A subline sits under it &hellip;&lt;/p&gt;
+&lt;p class="fm-prose"&gt;Body text carries the detail &hellip;&lt;/p&gt;
+&lt;p class="fm-emphasis"&gt;Emphasis sets a line in the serif face &hellip;&lt;/p&gt;</div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Size scale</h3>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-text-h1 · 2.441rem</span><span style="font-size: var(--fm-text-h1); font-family: var(--fm-font-headline);">Headline 1</span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-text-h2 · 1.953rem</span><span style="font-size: var(--fm-text-h2); font-family: var(--fm-font-headline);">Headline 2</span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-text-h3 · 1.563rem</span><span style="font-size: var(--fm-text-h3); font-family: var(--fm-font-headline);">Headline 3</span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-text-subline · 1.25rem</span><span style="font-size: var(--fm-text-subline);">Subline</span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-text-copy · 1rem · 16px</span><span style="font-size: var(--fm-text-copy);">Body text</span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-text-small · 0.8rem</span><span style="font-size: var(--fm-text-small);">Small text</span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-text-micro · 0.6875rem · 11px</span><span style="font-size: var(--fm-text-micro);">Micro — dense caption context only</span></div>
+        <p class="fm-prose doc-lead" style="margin-top: var(--fm-space-3);">
+          The micro tier is for dense caption context — sub-labels, table
+          footers, meta tags. Not for reading text.
+        </p>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Line heights</h3>
+        <p class="fm-prose doc-lead">
+          Two multipliers, applied unchanged as
+          <code class="doc-code">line-height</code>.
+        </p>
+        <div class="doc-demo">
+          <p style="line-height: var(--fm-leading-headline); font-size: var(--fm-text-h3); font-family: var(--fm-font-headline); margin: 0 0 var(--fm-space-3);">
+            Tight headline leading<br>across several lines<br>for compact titles
+          </p>
+          <p style="line-height: var(--fm-leading-copy); margin: 0;">
+            Wide copy leading<br>across several lines<br>for readable paragraphs
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="layout">
+    <div class="fm-container">
+      <h2 class="fm-headline">Layout</h2>
+      <p class="fm-prose doc-lead">
+        Layout classes, six spacing tokens, the component metrics and two
+        documentation-only breakpoints.
+      </p>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Layout classes</h3>
+        <table class="doc-table">
+          <thead><tr><th>Class</th><th>Does</th></tr></thead>
+          <tbody>
+            <tr><td><code class="doc-code">.fm-container</code></td><td>Centred content column, capped at <code class="doc-code">--fm-container-max</code></td></tr>
+            <tr><td><code class="doc-code">.fm-section</code></td><td>Vertical section rhythm</td></tr>
+            <tr><td><code class="doc-code">.fm-grid</code>, <code class="doc-code">--2</code>, <code class="doc-code">--3</code></td><td>Two- and three-column grids that collapse on narrow viewports</td></tr>
+            <tr><td><code class="doc-code">.fm-section-head</code></td><td>Section heading block with a rule</td></tr>
+          </tbody>
+        </table>
+        <div class="doc-demo">
+          <div class="fm-grid fm-grid--3">
+            <div class="doc-placeholder">Column 1</div>
+            <div class="doc-placeholder">Column 2</div>
+            <div class="doc-placeholder">Column 3</div>
+          </div>
+        </div>
+        <div class="doc-codeblock">&lt;div class="fm-grid fm-grid--3"&gt; &hellip; &lt;/div&gt;</div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Spacing</h3>
+        <p class="fm-prose doc-lead">
+          Six tokens, base 0.25rem. Use them rather than hard-coded values —
+          this is the layout rhythm, and it is not part of the brand.
+        </p>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-space-1 · 0.25rem</span><span class="doc-bar" style="width: var(--fm-space-1);"></span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-space-2 · 0.5rem</span><span class="doc-bar" style="width: var(--fm-space-2);"></span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-space-3 · 1rem</span><span class="doc-bar" style="width: var(--fm-space-3);"></span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-space-4 · 1.5rem</span><span class="doc-bar" style="width: var(--fm-space-4);"></span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-space-5 · 2rem</span><span class="doc-bar" style="width: var(--fm-space-5);"></span></div>
+        <div class="doc-specimen"><span class="doc-specimen__label">--fm-space-6 · 3rem</span><span class="doc-bar" style="width: var(--fm-space-6);"></span></div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Component metrics</h3>
+        <table class="doc-table">
+          <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><code class="doc-code">--fm-radius-sm</code></td><td>0.25rem</td><td>Small brand radius</td></tr>
+            <tr><td><code class="doc-code">--fm-radius-md</code></td><td>0.5rem</td><td>Brand radius</td></tr>
+            <tr><td><code class="doc-code">--fm-web-radius-control</code></td><td>6px</td><td>Inputs, buttons, controls</td></tr>
+            <tr><td><code class="doc-code">--fm-web-radius-card</code></td><td>10px</td><td>Cards, panels, modal</td></tr>
+            <tr><td><code class="doc-code">--fm-web-radius-mini</code></td><td>4px</td><td>Lozenges, inline tags, chips</td></tr>
+            <tr><td><code class="doc-code">--fm-border-width</code></td><td>2px</td><td>Standard stroke, e.g. the secondary button outline</td></tr>
+            <tr><td><code class="doc-code">--fm-web-input-min-h</code></td><td>44px</td><td>WCAG touch-target floor on inputs and controls</td></tr>
+            <tr><td><code class="doc-code">--fm-container-max</code></td><td>72rem</td><td>Content column cap</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Breakpoints</h3>
+        <p class="fm-prose doc-lead">
+          Two tokens, documentation only:
+          <code class="doc-code">--fm-breakpoint-sm</code> (36rem) and
+          <code class="doc-code">--fm-breakpoint-md</code> (48rem). A
+          <code class="doc-code">@media</code> condition cannot read
+          <code class="doc-code">var()</code>, so the values are repeated
+          literally in the source.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="components">
+    <div class="fm-container">
+      <h2 class="fm-headline">Header &amp; navigation</h2>
+      <p class="fm-prose doc-lead">
+        The page header above IS the live example. A white brand bar with a
+        primary accent rule at its lower edge; the navigation wraps on narrow
+        viewports instead of collapsing into a hamburger.
+      </p>
+      <p class="fm-prose doc-lead">
+        No logo file ships with the design system. The wordmark alone is the
+        honest default — a stretched or recoloured logo never looks
+        deliberate. Put your own file in the
+        <code class="doc-code">fm-header__logo</code> slot when you have one.
+      </p>
+      <div class="doc-codeblock">&lt;header class="fm-header"&gt;
+  &lt;div class="fm-header__inner"&gt;
+    &lt;a class="fm-header__brand" href="/"&gt;
+      &lt;img class="fm-header__logo" src="logo.svg" alt="Organisation"&gt;
+      &lt;span class="fm-header__wordmark"&gt;Tool name&lt;/span&gt;
+    &lt;/a&gt;
+    &lt;nav class="fm-header__nav" aria-label="Main navigation"&gt;
+      &lt;ul class="fm-header__nav-list"&gt;
+        &lt;li&gt;&lt;a class="fm-header__nav-current" href="#"&gt;Start&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Modifiers</h3>
+        <table class="doc-table">
+          <thead><tr><th>Class</th><th>Does</th></tr></thead>
+          <tbody>
+            <tr><td><code class="doc-code">.fm-header--dark</code></td><td>Solid primary bar with white text instead of the white bar</td></tr>
+            <tr><td><code class="doc-code">.fm-header--compact</code></td><td>Keeps everything on one line for search-first layouts — no wrap, tighter padding, truncation allowed</td></tr>
+            <tr><td><code class="doc-code">.fm-header--fixed</code></td><td>Fixed to the top. Add a matching <code class="doc-code">scroll-padding-top</code> on <code class="doc-code">&lt;html&gt;</code></td></tr>
+            <tr><td><code class="doc-code">.fm-header__subbrand</code></td><td>A second line under the wordmark, e.g. "A project by …"</td></tr>
+            <tr><td><code class="doc-code">.fm-header__support</code></td><td>Contact link in the nav zone; on narrow viewports only the icon remains</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Tool navigation</h3>
+        <p class="fm-prose doc-lead">
+          Horizontal section navigation, meant to sit directly under the page
+          headline — the quiet alternative to a vertical side menu. Tabs sit on
+          a hairline baseline; the active tab carries a deep primary marker.
+          Optional group labels structure longer navigations, and planned steps
+          stay visible as disabled.
+        </p>
+        <div class="doc-demo doc-demo--ground">
+          <nav class="fm-toolnav" aria-label="Tool navigation">
+            <div class="fm-toolnav__group">
+              <span class="fm-toolnav__label">Prepare</span>
+              <a class="fm-toolnav__item fm-toolnav__item--active" href="#components" aria-current="page">Overview</a>
+              <a class="fm-toolnav__item" href="#components">Import</a>
+            </div>
+            <div class="fm-toolnav__group">
+              <span class="fm-toolnav__label">Analyse</span>
+              <a class="fm-toolnav__item" href="#components">Compare</a>
+              <span class="fm-toolnav__item fm-toolnav__item--disabled">Export</span>
+            </div>
+          </nav>
+        </div>
+        <div class="doc-codeblock">&lt;nav class="fm-toolnav" aria-label="Tool navigation"&gt;
+  &lt;div class="fm-toolnav__group"&gt;
+    &lt;span class="fm-toolnav__label"&gt;Prepare&lt;/span&gt;
+    &lt;a class="fm-toolnav__item fm-toolnav__item--active" href="#" aria-current="page"&gt;Overview&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="buttons">
+    <div class="fm-container">
+      <h2 class="fm-headline">Buttons, cards and badges</h2>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Buttons</h3>
+        <p class="fm-prose doc-lead">
+          A button always carries a variant modifier —
+          <code class="doc-code">--primary</code> or
+          <code class="doc-code">--secondary</code>. Never the bare class.
+        </p>
+        <div class="doc-demo">
+          <a class="fm-btn fm-btn--primary" href="#buttons">Primary action</a>
+          <a class="fm-btn fm-btn--secondary" href="#buttons">Secondary action</a>
+        </div>
+        <p class="fm-prose doc-lead">
+          <code class="doc-code">:hover</code> darkens the primary button and
+          fills the secondary one; <code class="doc-code">:focus-visible</code>
+          shows the focus ring.
+        </p>
+        <div class="doc-codeblock">&lt;a class="fm-btn fm-btn--primary" href="#"&gt;Primary action&lt;/a&gt;
+&lt;a class="fm-btn fm-btn--secondary" href="#"&gt;Secondary action&lt;/a&gt;</div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Cards</h3>
+        <p class="fm-prose doc-lead">
+          A card holds one statement. Both variants set their own text colour
+          so the contrast is right on their surface. A variant modifier is
+          mandatory.
+        </p>
+        <div class="doc-demo">
+          <div class="fm-grid fm-grid--2">
+            <article class="fm-card fm-card--primary">
+              <h3 class="fm-card__title">Primary card</h3>
+              <p class="fm-card__body">On the primary surface with white text.</p>
+            </article>
+            <article class="fm-card fm-card--secondary">
+              <h3 class="fm-card__title">Secondary card</h3>
+              <p class="fm-card__body">On the secondary surface with dark text.</p>
+            </article>
+          </div>
+        </div>
+        <div class="doc-codeblock">&lt;article class="fm-card fm-card--primary"&gt;
+  &lt;h3 class="fm-card__title"&gt;Primary card&lt;/h3&gt;
+  &lt;p class="fm-card__body"&gt;&hellip;&lt;/p&gt;
+&lt;/article&gt;</div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Badges</h3>
+        <p class="fm-prose doc-lead">
+          A small angled flash for one short phrase. Two variants: accent and
+          highlight.
+        </p>
+        <div class="doc-demo">
+          <span class="fm-badge fm-badge--accent">New</span>
+          <span class="fm-badge fm-badge--highlight">Beta</span>
+        </div>
+        <div class="doc-codeblock">&lt;span class="fm-badge fm-badge--accent"&gt;New&lt;/span&gt;</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="content">
+    <div class="fm-container">
+      <h2 class="fm-headline">Content components</h2>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Callout</h3>
+        <p class="fm-prose doc-lead">
+          Five semantic variants. The optional
+          <code class="doc-code">__lead</code> slot replaces a hand-written
+          <code class="doc-code">&lt;strong&gt;</code> prefix.
+        </p>
+        <div class="doc-demo">
+          <aside class="fm-callout fm-callout--info">
+            <p class="fm-callout__lead">Info</p>
+            <p class="fm-prose" style="margin:0;">Follows the brand — this is the one themeable status variant.</p>
+          </aside>
+          <aside class="fm-callout fm-callout--success" style="margin-top: var(--fm-space-3);">
+            <p class="fm-prose" style="margin:0;">Success. Green in every theme.</p>
+          </aside>
+          <aside class="fm-callout fm-callout--warn" style="margin-top: var(--fm-space-3);">
+            <p class="fm-prose" style="margin:0;">Warning. Yellow in every theme.</p>
+          </aside>
+          <aside class="fm-callout fm-callout--error" style="margin-top: var(--fm-space-3);">
+            <p class="fm-prose" style="margin:0;">Error. Red in every theme.</p>
+          </aside>
+          <aside class="fm-callout fm-callout--legal" style="margin-top: var(--fm-space-3);">
+            <p class="fm-prose" style="margin:0;">Legal or procedural note — deliberately neutral grey.</p>
+          </aside>
+        </div>
+        <div class="doc-codeblock">&lt;aside class="fm-callout fm-callout--warn"&gt;
+  &lt;p class="fm-callout__lead"&gt;Note&lt;/p&gt;
+  &lt;p class="fm-prose"&gt;&hellip;&lt;/p&gt;
+&lt;/aside&gt;</div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Tags</h3>
+        <p class="fm-prose doc-lead">
+          Two families in one: structural (neutral, info, required, risk) and
+          status (ok/success, warn, error/danger).
+        </p>
+        <div class="doc-demo">
+          <span class="fm-tag fm-tag--neutral">Neutral</span>
+          <span class="fm-tag fm-tag--info">Info</span>
+          <span class="fm-tag fm-tag--required">Required</span>
+          <span class="fm-tag fm-tag--risk">Risk</span>
+          <span class="fm-tag fm-tag--ok">Ok</span>
+          <span class="fm-tag fm-tag--warn">Warn</span>
+          <span class="fm-tag fm-tag--error">Error</span>
+        </div>
+        <div class="doc-codeblock">&lt;span class="fm-tag fm-tag--ok"&gt;Ok&lt;/span&gt;</div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Hero and section head</h3>
+        <div class="doc-demo doc-demo--ground">
+          <div class="fm-hero">
+            <h2 class="fm-hero__title">A hero strip</h2>
+            <p class="fm-hero__intro">One sentence of framing, on the tinted surface.</p>
+          </div>
+          <div class="fm-section-head" style="margin-top: var(--fm-space-4);">
+            <h2 class="fm-headline" style="font-size: var(--fm-text-h2);">A section head</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Skip link</h3>
+        <p class="fm-prose doc-lead">
+          The first interactive element on this page. Tab from the very top to
+          reveal it — it is visually hidden until focused.
+        </p>
+        <div class="doc-codeblock">&lt;a class="fm-skiplink" href="#main"&gt;Skip to content&lt;/a&gt;</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="data">
+    <div class="fm-container">
+      <h2 class="fm-headline">Data components</h2>
+      <p class="fm-prose doc-lead">
+        Panels frame a block of content; metric cards show a single figure with
+        a semantic accent rule.
+      </p>
+      <div class="doc-demo doc-demo--ground">
+        <div class="fm-grid fm-grid--3">
+          <div class="fm-metric-card fm-metric-card--revenue">
+            <span class="fm-metric-card__num">69 700</span>
+            <span class="fm-metric-card__label">Revenue €</span>
+          </div>
+          <div class="fm-metric-card fm-metric-card--cost">
+            <span class="fm-metric-card__num">54 200</span>
+            <span class="fm-metric-card__label">Cost €</span>
+          </div>
+          <div class="fm-metric-card fm-metric-card--net">
+            <span class="fm-metric-card__num">15 500</span>
+            <span class="fm-metric-card__label">Net €</span>
+          </div>
+        </div>
+        <div class="fm-panel" style="margin-top: var(--fm-space-4);">
+          <div class="fm-panel__head">
+            <div class="fm-panel__head-row">
+              <h3 class="fm-subline" style="margin:0;">A panel</h3>
+              <span class="fm-tag fm-tag--neutral">3 items</span>
+            </div>
+          </div>
+          <div class="fm-panel__body">
+            <p class="fm-prose" style="margin:0;">Panels frame content blocks and pair with the table body variant.</p>
+            <p class="fm-panel__note">A quiet note at the foot of the panel.</p>
+          </div>
+        </div>
+      </div>
+      <div class="doc-codeblock">&lt;div class="fm-metric-card fm-metric-card--net"&gt;
+  &lt;span class="fm-metric-card__num"&gt;15 500&lt;/span&gt;
+  &lt;span class="fm-metric-card__label"&gt;Net €&lt;/span&gt;
+&lt;/div&gt;</div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="controls">
+    <div class="fm-container">
+      <h2 class="fm-headline">Controls</h2>
+      <p class="fm-prose doc-lead">
+        A tab bar with folder-tab optics and a segment switcher for toggle
+        groups. Attach your own listeners; they toggle
+        <code class="doc-code">.is-active</code> between the buttons.
+      </p>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Tab bar</h3>
+        <div class="doc-demo doc-demo--ground">
+          <div class="fm-tabbar" role="tablist">
+            <button class="fm-tab is-active" role="tab" aria-selected="true" type="button">Overview</button>
+            <button class="fm-tab" role="tab" aria-selected="false" type="button">Detail</button>
+            <button class="fm-tab" role="tab" aria-selected="false" type="button">History</button>
+          </div>
+          <div class="fm-tab-panel" role="tabpanel">
+            <p class="fm-prose" style="margin:0;">The panel body sits under the bar and shares its surface.</p>
+          </div>
+        </div>
+        <div class="doc-codeblock">&lt;div class="fm-tabbar" role="tablist"&gt;
+  &lt;button class="fm-tab is-active" role="tab" aria-selected="true"&gt;Overview&lt;/button&gt;
+  &lt;button class="fm-tab" role="tab" aria-selected="false"&gt;Detail&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class="fm-tab-panel" role="tabpanel"&gt;&hellip;&lt;/div&gt;</div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Switcher</h3>
+        <div class="doc-demo">
+          <div class="fm-switcher">
+            <span class="fm-switcher__label">View</span>
+            <button type="button" class="fm-switch-btn is-active">Table</button>
+            <button type="button" class="fm-switch-btn">Chart</button>
+          </div>
+        </div>
+        <div class="doc-codeblock">&lt;div class="fm-switcher"&gt;
+  &lt;span class="fm-switcher__label"&gt;View&lt;/span&gt;
+  &lt;button type="button" class="fm-switch-btn is-active"&gt;Table&lt;/button&gt;
+  &lt;button type="button" class="fm-switch-btn"&gt;Chart&lt;/button&gt;
+&lt;/div&gt;</div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Search trigger</h3>
+        <p class="fm-prose doc-lead">
+          The button that opens the modal search, with its keyboard shortcut
+          shown inline.
+        </p>
+        <div class="doc-demo">
+          <button type="button" class="fm-search-trigger">
+            Search <kbd class="fm-search-trigger__kbd">Ctrl K</kbd>
+          </button>
+        </div>
+      </div>
+
+      <div class="doc-block">
+        <h3 class="fm-subline">Standalone nav</h3>
+        <div class="doc-demo">
+          <nav class="fm-nav" aria-label="Secondary navigation">
+            <a class="fm-nav__link fm-nav__link--active" href="#controls">Current</a>
+            <a class="fm-nav__link" href="#controls">Another</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="forms">
+    <div class="fm-container">
+      <h2 class="fm-headline">Forms</h2>
+      <p class="fm-prose doc-lead">
+        Input building blocks for data tools. Behaviour — validation, submit —
+        is yours; this supplies optics plus states. Native elements take the
+        class directly; the only wrapper is the optional
+        <code class="doc-code">.fm-field</code>.
+      </p>
+      <p class="fm-prose doc-lead">
+        Every control carries a 44px touch-target floor (WCAG 2.5.5 / 2.5.8).
+        A placeholder is not a label — it disappears the moment someone types.
+      </p>
+
+      <div class="doc-demo">
+        <div class="fm-field" style="max-width: 26rem;">
+          <label class="fm-field__label" for="sg-email">Email address</label>
+          <input class="fm-input" id="sg-email" type="email" placeholder="name@example.com">
+          <span class="fm-field__hint">A hint sits under the field, never inside it.</span>
+        </div>
+
+        <div class="fm-field" style="max-width: 26rem; margin-top: var(--fm-space-3);">
+          <label class="fm-field__label" for="sg-invalid">Invalid state</label>
+          <input class="fm-input" id="sg-invalid" type="text" aria-invalid="true" value="not-an-email">
+          <span class="fm-field__error">Enter a valid email address.</span>
+        </div>
+
+        <div class="fm-field" style="max-width: 26rem; margin-top: var(--fm-space-3);">
+          <label class="fm-field__label" for="sg-disabled">Disabled</label>
+          <input class="fm-input" id="sg-disabled" type="text" value="Read only" disabled>
+        </div>
+
+        <div class="fm-field" style="max-width: 26rem; margin-top: var(--fm-space-3);">
+          <label class="fm-field__label" for="sg-select">Select</label>
+          <select class="fm-select" id="sg-select">
+            <option>First option</option>
+            <option>Second option</option>
+          </select>
+        </div>
+
+        <div class="fm-field" style="max-width: 26rem; margin-top: var(--fm-space-3);">
+          <label class="fm-field__label" for="sg-textarea">Textarea</label>
+          <textarea class="fm-textarea" id="sg-textarea" rows="3">Multi-line input.</textarea>
+        </div>
+
+        <div class="fm-field" style="max-width: 26rem; margin-top: var(--fm-space-3);">
+          <label class="fm-field__label" for="sg-range">Range</label>
+          <input class="fm-range" id="sg-range" type="range" min="0" max="100" value="40">
+        </div>
+
+        <div class="fm-radio-group" style="margin-top: var(--fm-space-3);">
+          <label class="fm-check"><input class="fm-radio" type="radio" name="sg-r" checked> First choice</label>
+          <label class="fm-check"><input class="fm-radio" type="radio" name="sg-r"> Second choice</label>
+        </div>
+
+        <label class="fm-check" style="margin-top: var(--fm-space-3);">
+          <input class="fm-checkbox" type="checkbox" checked> A checkbox with a real label
+        </label>
+      </div>
+
+      <div class="doc-codeblock">&lt;div class="fm-field"&gt;
+  &lt;label class="fm-field__label" for="email"&gt;Email address&lt;/label&gt;
+  &lt;input class="fm-input" id="email" type="email"&gt;
+  &lt;span class="fm-field__hint"&gt;A hint sits under the field.&lt;/span&gt;
+&lt;/div&gt;</div>
+    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="modal">
+    <div class="fm-container">
+      <h2 class="fm-headline">Modal</h2>
+      <p class="fm-prose doc-lead">
+        An opt-in class for the native <code class="doc-code">&lt;dialog&gt;</code>.
+        You supply the markup and the open/close logic
+        (<code class="doc-code">showModal()</code> /
+        <code class="doc-code">close()</code>); the design system supplies
+        backdrop, shadow, radius and the sub-element layout. Variants:
+        <code class="doc-code">--narrow</code>, <code class="doc-code">--wide</code>,
+        <code class="doc-code">--blur</code>.
+      </p>
+      <div class="doc-demo">
+        <button type="button" class="fm-btn fm-btn--primary"
+                onclick="document.getElementById('sg-modal').showModal()">Open the dialog</button>
+      </div>
+      <dialog class="fm-modal" id="sg-modal">
+        <div class="fm-modal__head">
+          <h2 class="fm-modal__title">Example dialog</h2>
+          <button type="button" class="fm-modal__close" aria-label="Close"
+                  onclick="this.closest('dialog').close()">×</button>
+        </div>
+        <div class="fm-modal__body">
+          <p class="fm-prose" style="margin:0;">Esc or the close button dismisses it.</p>
+        </div>
+        <div class="fm-modal__actions">
+          <button type="button" class="fm-btn fm-btn--secondary"
+                  onclick="this.closest('dialog').close()">Close</button>
+        </div>
+      </dialog>
+      <div class="doc-codeblock">&lt;dialog class="fm-modal" id="d"&gt;
+  &lt;div class="fm-modal__head"&gt;
+    &lt;h2 class="fm-modal__title"&gt;Example dialog&lt;/h2&gt;
+    &lt;button class="fm-modal__close" aria-label="Close"&gt;×&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="fm-modal__body"&gt;&hellip;&lt;/div&gt;
+  &lt;div class="fm-modal__actions"&gt;&hellip;&lt;/div&gt;
+&lt;/dialog&gt;</div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="table">
+    <div class="fm-container">
+      <h2 class="fm-headline">Table</h2>
+      <p class="fm-prose doc-lead">
+        Sticky head, optional zebra, compact and dense variants, a numeric
+        column helper and a sticky-first-column variant for wide comparisons.
+        Optics only: sorting and selection are yours, toggling
+        <code class="doc-code">.is-active</code> and
+        <code class="doc-code">.is-selected</code>.
+      </p>
+      <p class="fm-prose doc-lead">
+        Half your audience opens the tool on a phone. A twelve-column table is
+        unusable there however well it is styled — wrap it in
+        <code class="doc-code">.fm-table-scroll</code>, or show fewer columns.
+      </p>
+      <div class="doc-demo doc-demo--ground">
+        <div class="fm-table-scroll">
+          <table class="fm-table fm-table--zebra">
+            <thead>
+              <tr>
+                <th class="fm-table__sortable is-active">Item</th>
+                <th>Owner</th>
+                <th class="fm-table__num">Amount €</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Cargo-bike sharing</td><td>Transport</td><td class="fm-table__num">42 000</td></tr>
+              <tr><td>School garden</td><td>Education</td><td class="fm-table__num">18 500</td></tr>
+              <tr><td>Energy advice</td><td>Facilities</td><td class="fm-table__num">9 200</td></tr>
+            </tbody>
+            <tfoot><tr><td colspan="2">Total</td><td class="fm-table__num">69 700</td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="doc-codeblock">&lt;div class="fm-table-scroll"&gt;
+  &lt;table class="fm-table fm-table--zebra"&gt;
+    &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Item&lt;/th&gt;&lt;th class="fm-table__num"&gt;Amount €&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;&hellip;&lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</div>
+      <table class="doc-table">
+        <thead><tr><th>Modifier</th><th>Does</th></tr></thead>
+        <tbody>
+          <tr><td><code class="doc-code">--zebra</code></td><td>Alternating row backgrounds</td></tr>
+          <tr><td><code class="doc-code">--compact</code></td><td>Reduced cell padding for dense lists</td></tr>
+          <tr><td><code class="doc-code">--dense</code></td><td>Micro type for data-heavy tables</td></tr>
+          <tr><td><code class="doc-code">--sticky-col</code></td><td>Sticky first column; needs <code class="doc-code">.fm-table-scroll</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="dropzone">
+    <div class="fm-container">
+      <h2 class="fm-headline">Dropzone</h2>
+      <p class="fm-prose doc-lead">
+        File-drop zone with idle, hover, dragover and error states. Optics
+        only — wire up the listeners and toggle
+        <code class="doc-code">.is-dragover</code> and
+        <code class="doc-code">.is-error</code>.
+      </p>
+      <div class="doc-demo">
+        <div class="fm-dropzone">
+          <span class="fm-dropzone__icon" aria-hidden="true">↓</span>
+          <span class="fm-dropzone__label">Drop a file here</span>
+          <span class="fm-dropzone__hint">or</span>
+          <button type="button" class="fm-btn fm-btn--secondary fm-dropzone__trigger">Choose a file</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="toast">
+    <div class="fm-container">
+      <h2 class="fm-headline">Toast</h2>
+      <p class="fm-prose doc-lead">
+        The toaster is the fixed container, the toast a single message. Four
+        severity variants. The slide-in respects
+        <code class="doc-code">prefers-reduced-motion</code>. Auto-dismiss is
+        yours.
+      </p>
+      <div class="doc-demo">
+        <button type="button" class="fm-btn fm-btn--primary"
+                onclick="(function(){
+                  var t=document.getElementById('sg-toaster');
+                  var n=document.createElement('div');
+                  n.className='fm-toast fm-toast--success';
+                  n.innerHTML='&lt;div class=&quot;fm-toast__body&quot;&gt;Saved.&lt;/div&gt;';
+                  var b=document.createElement('button');
+                  b.type='button'; b.className='fm-toast__close';
+                  b.setAttribute('aria-label','Close'); b.textContent='×';
+                  b.addEventListener('click',function(){n.remove();});
+                  n.appendChild(b); t.appendChild(n);
+                  setTimeout(function(){n.remove();},4000);
+                })()">Trigger a toast</button>
+      </div>
+      <div class="fm-toaster" id="sg-toaster" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="toolbar">
+    <div class="fm-container">
+      <h2 class="fm-headline">Toolbar</h2>
+      <p class="fm-prose doc-lead">
+        A sticky action bar for bulk actions. Sticks to the bottom of the
+        viewport by default; <code class="doc-code">--top</code> flips it.
+      </p>
+      <div class="doc-demo">
+        <div class="fm-toolbar fm-toolbar--top" style="position: static;">
+          <span class="fm-toolbar__count">3 selected</span>
+          <div class="fm-toolbar__actions">
+            <button type="button" class="fm-btn fm-btn--secondary">Export</button>
+            <button type="button" class="fm-btn fm-btn--primary">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="search">
+    <div class="fm-container">
+      <h2 class="fm-headline">Search</h2>
+      <p class="fm-prose doc-lead">
+        A search field plus result overlay. Two variants of one family: an
+        inline overlay dropdown that sits over the content so there is no
+        layout shift, and a modal / Ctrl-K variant that reuses
+        <code class="doc-code">.fm-modal</code>.
+      </p>
+      <p class="fm-prose doc-lead">
+        The behaviour — open/close, arrow-key navigation, ARIA
+        combobox/listbox/option, focus trap, debounce with a race guard,
+        reduced motion — comes from
+        <code class="doc-code">fm-search.js</code>. The module is
+        engine-neutral: you pass an adapter.
+      </p>
+      <div class="doc-demo">
+        <div class="fm-search">
+          <input type="search" class="fm-input fm-search__field" placeholder="Search …" aria-label="Search">
+          <div class="fm-search__overlay">
+            <div class="fm-search__results">
+              <a class="fm-search__item" href="#search">
+                <span class="fm-search__item-title">A result title</span>
+                <span class="fm-search__item-excerpt">An excerpt with the <mark class="fm-mark">hit</mark> marked.</span>
+              </a>
+              <a class="fm-search__item" href="#search">
+                <span class="fm-search__item-title">Another result</span>
+                <span class="fm-search__item-badge">Section</span>
+              </a>
+            </div>
+            <div class="fm-search__count">2 results</div>
+          </div>
+        </div>
+        <p class="fm-prose" style="margin-top: var(--fm-space-3); font-size: var(--fm-text-small);">
+          Shown open and static here so the states are visible on the page.
+        </p>
+      </div>
+      <div class="doc-codeblock">import { createSearch }
+  from 'https://design-system.flomotlik.me/fm-search.js';
+
+createSearch({
+  input:   '#search',
+  overlay: '#search-overlay',
+  search:  async (query, { signal }) =&gt; myIndex.find(query, { signal }),
+});</div>
+      <table class="doc-table">
+        <thead><tr><th>State class</th><th>Shown when</th></tr></thead>
+        <tbody>
+          <tr><td><code class="doc-code">--hint</code></td><td>Below the minimum query length</td></tr>
+          <tr><td><code class="doc-code">--loading</code></td><td>A search is in flight</td></tr>
+          <tr><td><code class="doc-code">--no-results</code></td><td>The adapter returned nothing</td></tr>
+          <tr><td><code class="doc-code">--empty</code></td><td>The field is empty</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="fm-section doc-section-alt" id="hc">
+    <div class="fm-container">
+      <h2 class="fm-headline">High contrast</h2>
+      <p class="fm-prose doc-lead">
+        Put <code class="doc-code">.fm-mode-hc</code> on
+        <code class="doc-code">&lt;body&gt;</code> or any ancestor. Every
+        component has a hand-written override; the palette is ink plus
+        highlight, with accent for errors. The toggle button is yours to build.
+      </p>
+      <div class="doc-demo fm-mode-hc" style="padding: var(--fm-space-4);">
+        <p class="fm-prose">High-contrast mode, scoped to this box.</p>
+        <a class="fm-btn fm-btn--primary" href="#hc">Primary</a>
+        <a class="fm-btn fm-btn--secondary" href="#hc">Secondary</a>
+        <span class="fm-tag fm-tag--ok" style="margin-left: .5rem;">Ok</span>
+        <aside class="fm-callout fm-callout--warn" style="margin-top: var(--fm-space-3);">
+          <p class="fm-prose" style="margin:0;">A callout in high-contrast mode.</p>
+        </aside>
+      </div>
+      <div class="doc-codeblock">&lt;body class="fm-mode-hc"&gt; &hellip; &lt;/body&gt;</div>
+    </div>
+  </section>
+
+  <section class="fm-section" id="theming">
+    <div class="fm-container">
+      <h2 class="fm-headline">Theming</h2>
+      <p class="fm-prose doc-lead">
+        Link your own stylesheet after the design system and override tokens in
+        a plain <code class="doc-code">:root</code> block. That is enough
+        because the defaults live in <code class="doc-code">@layer</code>
+        rules, and unlayered declarations beat layered ones regardless of
+        document order.
+      </p>
+      <div class="doc-codeblock">&lt;link rel="stylesheet" href="https://design-system.flomotlik.me/design-system.css"&gt;
+&lt;link rel="stylesheet" href="local.css"&gt;</div>
+      <div class="doc-codeblock">/* local.css — colours for &lt;organisation&gt;.
+   Source of the values: &lt;style guide, URL, or who supplied them&gt;, &lt;date&gt;. */
+:root {
+  --fm-color-primary:      #1f4a6d;
+  --fm-color-primary-strong: #14324a;
+  --fm-color-secondary:    #8fb4cc;
+  --fm-color-accent:       #9a4a1c;
+
+  --fm-web-primary-deep:   #245a80;
+  --fm-web-primary:        #5b8cad;
+  --fm-web-primary-tint:   #e4edf4;
+
+  --fm-web-chart-1: #2f6f96; --fm-web-chart-2: #c08a2e;
+  /* … through -8 */
+}</div>
+
+      <h3 class="fm-subline">Two rules</h3>
+      <ul class="fm-prose doc-lead">
+        <li><strong>Override tokens, never components.</strong> The moment you
+          redefine <code class="doc-code">.fm-btn</code>, the next release
+          breaks your tool silently.</li>
+        <li><strong>Status colours are not themeable.</strong> Leave
+          <code class="doc-code">--fm-web-status-*</code> and the
+          warn/error/success variants alone. Green means ok everywhere.</li>
+      </ul>
+
+      <h3 class="fm-subline">The brand colour is usually too light</h3>
+      <p class="fm-prose doc-lead">
+        This is the common failure, not an edge case.
+        <code class="doc-code">--fm-color-primary</code> and
+        <code class="doc-code">--fm-web-primary-deep</code> carry white text,
+        so they need at least 4.5:1 against white. Many brand colours were
+        chosen for print and logos and fail badly.
+      </p>
+      <p class="fm-prose doc-lead">
+        <strong>Do not change the brand colour — split the roles.</strong> Use
+        it as a surface (<code class="doc-code">--fm-color-secondary</code>,
+        <code class="doc-code">--fm-web-primary-tint</code>) and a darkened
+        variant wherever white text sits on it. Write down in the file that the
+        darker value is derived for legibility, not invented, or someone will
+        "correct" it back later.
+      </p>
+
+      <h3 class="fm-subline">Check it afterwards</h3>
+      <ul class="fm-prose doc-lead">
+        <li><strong>Measure contrast, do not eyeball it.</strong> White text on
+          the primary button, body text, and anything on a tinted surface.
+          4.5:1 for normal text, 3:1 for large.</li>
+        <li><strong>Check the chart palette.</strong> Eight colours must stay
+          distinguishable from each other, including for the common
+          colour-vision deficiencies.</li>
+        <li><strong>Load the page and look at it.</strong> Token overrides are
+          cheap to get almost right and easy to get subtly wrong.</li>
+      </ul>
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="fm-section" style="border-top: 1px solid var(--fm-web-hairline);">
+    <div class="fm-container">
+      <p class="fm-prose" style="color: var(--fm-web-text-mute); font-size: var(--fm-text-small);">
+        fm design system · MIT licence · fonts under OFL 1.1 ·
+        <a href="https://design-system.flomotlik.me/design-system.css">design-system.css</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

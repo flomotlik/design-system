@@ -1,0 +1,2940 @@
+/* ========================================================================= *
+ * fm design system                                                          *
+ *                                                                           *
+ * A shared stylesheet for small web tools: consistent colour, typography,    *
+ * spacing and a set of components that cover what a data tool actually       *
+ * needs — header, forms, tables, dropzones, toasts, modals, search.          *
+ *                                                                           *
+ * One link, no build step, no package manager:                              *
+ *   https://design-system.flomotlik.me/design-system.css                     *
+ *                                                                           *
+ * Deliberately styles NO bare HTML tags. A consuming page sets its own       *
+ * base layout — see README, "The four lines everybody forgets".              *
+ *                                                                           *
+ * Licence: MIT.                                                             *
+ * ========================================================================= */
+
+/* --- Fonts -----------------------------------------------------------------
+   Spectral       — editorial serif (display, emphasis)
+   Inter          — body and UI
+   JetBrains Mono — code and figures
+   Caveat         — handwriting, marginalia only, never body text
+
+   Self-hosted as Latin-subset woff2. This is a deliberate, documented
+   exception to "never vendor": an OFL binary is a licensed asset, not a
+   dependency with a transitive tree. It also keeps the system GDPR-safe in
+   DACH — no third-party font CDN is contacted at view time — and means print
+   fidelity does not depend on a CDN being reachable when the page is printed.
+   Licences travel with the binaries in assets/fonts/OFL-*.txt, per OFL §2.
+
+   unicode-range covers Latin plus the punctuation and symbols the components
+   actually use; the -symbols faces carry the arrows and marks that the
+   subsetted text faces drop.
+   ------------------------------------------------------------------------ */
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-400italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-500italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('assets/fonts/Inter-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url('assets/fonts/JetBrainsMono-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 500 600;
+  font-display: swap;
+  src: url('assets/fonts/Caveat-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                 U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('assets/fonts/Inter-symbols.woff2') format('woff2');
+  unicode-range: U+2192, U+21B3, U+2713;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-symbols-400.woff2') format('woff2');
+  unicode-range: U+2192, U+21B3, U+2713;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-symbols-500.woff2') format('woff2');
+  unicode-range: U+2192, U+21B3, U+2713;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-symbols-600.woff2') format('woff2');
+  unicode-range: U+2192, U+21B3, U+2713;
+}
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/Spectral-symbols-700.woff2') format('woff2');
+  unicode-range: U+2192, U+21B3, U+2713;
+}
+
+@import "tailwindcss";
+
+/* High-contrast mode as a Tailwind v4 custom variant. Consumers can use
+   `fm-mode-hc:bg-...` utilities; the system additionally ships hand-written
+   overrides for every .fm-* component. The mode is switched on by putting the
+   .fm-mode-hc class on <body> or any ancestor — the toggle button itself is
+   the consumer's to build. */
+@custom-variant fm-mode-hc (&:where(.fm-mode-hc, .fm-mode-hc *));
+
+/* ========================================================================= *
+ * TOKENS — Tailwind v4 @theme                                               *
+ * Tokens live under Tailwind's namespace prefixes (--color-, --spacing-,     *
+ * --text-, --font-, --radius-). Tailwind emits them under :root; the         *
+ * @layer base alias block below mirrors them onto the consumer-stable        *
+ * --fm-* names that components and consuming tools reference.                *
+ *                                                                           *
+ * Colours are named by ROLE, never by hue. A theme can therefore be a flat   *
+ * token file: override the roles, change nothing else. Never introduce a     *
+ * token called --color-fm-blue.                                             *
+ * ========================================================================= */
+
+@theme {
+  /* === Brand colours ======================================================
+     Every value below is measured, not chosen by eye. The ratio in the
+     comment is the constraint that value has to keep — if you change a
+     colour, re-measure it and update the number. */
+
+  /* Carries WHITE text: primary buttons, header, active states. */
+  --color-fm-primary: #1f4a6d;            /* 9.30:1 on white */
+
+  /* Deepened variant for consumers that stack opacity. At
+     `color: var(--fm-color-primary); opacity: .8` the plain primary drops
+     toward the AA threshold; this one stays above it at 80%. */
+  --color-fm-primary-strong: #14324a;     /* 13.25:1 on white · 7.09:1 at 80% */
+
+  /* Surface accent, NOT a text colour on light ground. Carries DARK text
+     (--fm-color-on-secondary). */
+  --color-fm-secondary: #8fb4cc;          /* black on it: 9.57:1 */
+
+  /* NOT a decorative colour: this is the TEXT colour of high-contrast mode
+     (.fm-mode-hc puts it on ink). Changing it to an arbitrary brand value
+     silently breaks an accessibility feature. */
+  --color-fm-highlight: #ffd84d;          /* 11.42:1 on ink */
+
+  /* Accent surface (.fm-badge--accent), carries white text. */
+  --color-fm-accent: #9a4a1c;             /* 6.23:1 on white */
+
+  /* Neutrals */
+  --color-fm-white: #ffffff;
+  --color-fm-ink:   #1f2328;              /* 15.80:1 on white */
+
+  /* === Spacing — modular scale, base 0.25rem ============================= */
+  --spacing-fm-1: 0.25rem;
+  --spacing-fm-2: 0.5rem;
+  --spacing-fm-3: 1rem;
+  --spacing-fm-4: 1.5rem;
+  --spacing-fm-5: 2rem;
+  --spacing-fm-6: 3rem;
+
+  /* === Radii ============================================================= */
+  --radius-fm-sm: 0.25rem;
+  --radius-fm-md: 0.5rem;
+
+  /* === Type families ===================================================== */
+  --font-fm-headline: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-fm-copy:     'Inter', system-ui, -apple-system, sans-serif;
+  --font-fm-emphasis: 'Spectral', Georgia, 'Times New Roman', serif;
+  --font-fm-mono:     'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  --font-fm-hand:     'Caveat', 'Segoe Script', cursive;
+
+  /* === Type scale — base 1rem, ratio 1.25 ================================ */
+  --text-fm-h1:      2.441rem;
+  --text-fm-h2:      1.953rem;
+  --text-fm-h3:      1.563rem;
+  --text-fm-subline: 1.25rem;
+  --text-fm-copy:    1rem;
+  --text-fm-small:   0.8rem;
+  /* micro tier (11px) for dense caption context — sub-labels, table
+     footers, meta tags. Not for reading text. */
+  --text-fm-micro:   0.6875rem;
+
+  /* === Web layer — desaturated, screen-oriented =========================
+     Sits alongside the brand layer. Consumers choose what they bind to:
+     brand tokens (--fm-color-*) for display and print work, web tokens
+     (--fm-web-*) for data tools with long reading stretches.
+
+     The web layer measures against --fm-web-text (#22262b), not against
+     ink. A ratio without the text tone it was measured against is
+     worthless. */
+  --color-fm-web-bg:           #f4f6f8;
+  --color-fm-web-surface:      #ffffff;
+  --color-fm-web-surface-sunk: #f8fafc;
+  --color-fm-web-hairline:     #dfe4ea;
+  --color-fm-web-text:         #22262b;   /* 14.05:1 on web-bg */
+  --color-fm-web-text-soft:    #5a616b;   /* 5.77:1 on web-bg */
+  --color-fm-web-text-mute:    #69707a;   /* 4.62:1 on web-bg */
+  --color-fm-web-clay-text:    #9c5a38;
+
+  /* Triple duty: surface carrying white text (.fm-skiplink, active switch
+     buttons) AND text colour on light ground (header nav, active tab,
+     info tag) AND text on a 14% mix of itself (.fm-tag--required). It has
+     to clear 4.5:1 against all three. */
+  --color-fm-web-primary-deep: #245a80;   /* 7.37:1 white · 6.22:1 on tint · 5.94:1 on 14% mix */
+
+  /* Borders, accent rules, translucent hover surfaces. NOTHING sits on it
+     as text — no contrast requirement. */
+  --color-fm-web-primary:      #5b8cad;
+
+  --color-fm-web-primary-tint: #e4edf4;   /* 12.84:1 against web-text */
+  --color-fm-web-highlight:    #e8c44a;
+
+  /* Status colours — fixed, and deliberately NOT derived from the brand.
+     A theme may not re-tint these: warn is yellow, error is red, success is
+     green, in every theme and every organisation. They are the one part of
+     the palette that carries meaning rather than identity. */
+  --color-fm-web-status-success: #3f7d55;
+  --color-fm-web-status-warn:    #b78a1c;
+  --color-fm-web-status-error:   #b3401e;
+
+  /* 8-tone chart palette — categorical, low saturation. Order matches
+     PALETTE in fm-charts.js.
+
+     Constraint, and the reason the values look arbitrary: no two entries
+     may share BOTH a close hue and a close luminance, or they collapse
+     into each other for a red-green colour-blind reader and in greyscale
+     print. Verified pairwise — closest risky pair is 1.35x in luminance.
+     Two shades of the same brand colour side by side in a stacked bar is
+     a problem, not brand consistency. */
+  --color-fm-web-chart-1: #2f6f96; /* blue — primary series */
+  --color-fm-web-chart-2: #c08a2e; /* ochre */
+  --color-fm-web-chart-3: #4e8f6d; /* green */
+  --color-fm-web-chart-4: #a8503c; /* rust */
+  --color-fm-web-chart-5: #6d5b9e; /* violet */
+  --color-fm-web-chart-6: #4fb0ad; /* light teal */
+  --color-fm-web-chart-7: #6b4a2e; /* brown */
+  --color-fm-web-chart-8: #7d838c; /* slate grey */
+
+  /* Web radii — flatter than the brand radii, because data-tool optics */
+  --radius-fm-web-control: 6px;
+  --radius-fm-web-card:    10px;
+  /* mini tier between control (6px) and nothing — lozenges, mini chips,
+     inline tags, narrow indicators. */
+  --radius-fm-web-mini:    4px;
+}
+
+/* ========================================================================= *
+ * CONSUMER-STABLE ALIASES                                                   *
+ * The --fm-* namespace points at the Tailwind-emitted values. Components     *
+ * reference --fm-* and nothing else; a value can change here without any     *
+ * consuming tool having to rename anything.                                  *
+ *                                                                           *
+ * These live in @layer base on purpose. Unlayered declarations beat layered  *
+ * ones regardless of document order, so a consuming tool can re-theme the    *
+ * whole system with a plain :root block and no cascade fights.               *
+ * ========================================================================= */
+
+@layer base {
+  :root {
+    /* Brand colours */
+    --fm-color-primary:        var(--color-fm-primary);
+    --fm-color-primary-strong: var(--color-fm-primary-strong);
+    --fm-color-secondary:      var(--color-fm-secondary);
+    --fm-color-highlight:      var(--color-fm-highlight);
+    --fm-color-accent:         var(--color-fm-accent);
+    --fm-color-white:          var(--color-fm-white);
+    --fm-color-ink:            var(--color-fm-ink);
+
+    /* Semantic roles */
+    --fm-color-text:         var(--fm-color-ink);
+    --fm-color-surface:      var(--fm-color-white);
+    --fm-color-on-primary:   var(--fm-color-white);    /* text on primary */
+    --fm-color-on-secondary: var(--fm-color-ink);      /* 7.20:1 on secondary */
+
+    /* Type families */
+    --fm-font-headline: var(--font-fm-headline);
+    --fm-font-copy:     var(--font-fm-copy);
+    --fm-font-emphasis: var(--font-fm-emphasis);
+    --fm-font-mono:     var(--font-fm-mono);
+    --fm-font-hand:     var(--font-fm-hand);
+
+    /* Type scale */
+    --fm-text-h1:      var(--text-fm-h1);
+    --fm-text-h2:      var(--text-fm-h2);
+    --fm-text-h3:      var(--text-fm-h3);
+    --fm-text-subline: var(--text-fm-subline);
+    --fm-text-copy:    var(--text-fm-copy);
+    --fm-text-small:   var(--text-fm-small);
+    --fm-text-micro:   var(--text-fm-micro);
+
+    /* Line heights — multipliers, not absolute values */
+    --fm-leading-headline: 0.9;
+    --fm-leading-copy:     1.3;
+
+    /* Spacing */
+    --fm-space-1: var(--spacing-fm-1);
+    --fm-space-2: var(--spacing-fm-2);
+    --fm-space-3: var(--spacing-fm-3);
+    --fm-space-4: var(--spacing-fm-4);
+    --fm-space-5: var(--spacing-fm-5);
+    --fm-space-6: var(--spacing-fm-6);
+
+    /* Radii and layout metrics */
+    --fm-radius-sm:     var(--radius-fm-sm);
+    --fm-radius-md:     var(--radius-fm-md);
+    --fm-border-width:  2px;
+    --fm-container-max: 72rem;
+
+    /* Breakpoints — documentation only; @media cannot read var() */
+    --fm-breakpoint-sm: 36rem;
+    --fm-breakpoint-md: 48rem;
+
+    /* === Web-layer aliases =============================================
+       Consumer-stable names for the desaturated screen layer. */
+    --fm-web-bg:           var(--color-fm-web-bg);
+    --fm-web-surface:      var(--color-fm-web-surface);
+    --fm-web-surface-sunk: var(--color-fm-web-surface-sunk);
+    --fm-web-hairline:     var(--color-fm-web-hairline);
+    --fm-web-text:         var(--color-fm-web-text);
+    --fm-web-text-soft:    var(--color-fm-web-text-soft);
+    --fm-web-text-mute:    var(--color-fm-web-text-mute);
+    --fm-web-clay-text:    var(--color-fm-web-clay-text);
+    --fm-web-primary-deep:   var(--color-fm-web-primary-deep);
+    --fm-web-primary:        var(--color-fm-web-primary);
+    --fm-web-primary-tint:   var(--color-fm-web-primary-tint);
+    --fm-web-highlight:       var(--color-fm-web-highlight);
+
+    /* Status — see the note in @theme. Not themeable. */
+    --fm-web-status-success: var(--color-fm-web-status-success);
+    --fm-web-status-warn:    var(--color-fm-web-status-warn);
+    --fm-web-status-error:   var(--color-fm-web-status-error);
+
+    --fm-web-chart-1: var(--color-fm-web-chart-1);
+    --fm-web-chart-2: var(--color-fm-web-chart-2);
+    --fm-web-chart-3: var(--color-fm-web-chart-3);
+    --fm-web-chart-4: var(--color-fm-web-chart-4);
+    --fm-web-chart-5: var(--color-fm-web-chart-5);
+    --fm-web-chart-6: var(--color-fm-web-chart-6);
+    --fm-web-chart-7: var(--color-fm-web-chart-7);
+    --fm-web-chart-8: var(--color-fm-web-chart-8);
+
+    --fm-web-shadow:        0 1px 2px rgba(31,38,28,.05),
+                             0 4px 14px rgba(31,38,28,.05);
+    --fm-web-shadow-elevated: 0 6px 24px rgba(31,38,28,.18),
+                               0 2px 6px rgba(31,38,28,.08);
+    --fm-web-page-max:      min(2040px, 94vw);
+    --fm-web-radius-control: var(--radius-fm-web-control);
+    --fm-web-radius-card:    var(--radius-fm-web-card);
+    --fm-web-radius-mini:    var(--radius-fm-web-mini);
+    --fm-web-focus-ring:    0 0 0 3px color-mix(in srgb,
+                                       var(--fm-web-primary) 38%, transparent);
+    --fm-web-focus-offset:  2px;
+
+    /* === Modal ============================================================= */
+    --fm-web-modal-bg:       var(--fm-web-surface);
+    --fm-web-modal-backdrop: rgba(31,38,28,.55);
+    --fm-web-modal-shadow:   var(--fm-web-shadow-elevated);
+    --fm-web-modal-radius:   var(--fm-web-radius-card);
+
+    /* === Callout modifiers =================================================
+       Semantic notice family. Token trios: bg / border / text.
+
+       STATUS COLOURS ARE NOT THEMEABLE. warn is yellow, error is red and
+       success is green in every theme, because that is what they mean.
+       `info` is the one variant that deliberately follows the brand — it
+       draws bg/border from the primary tint and deep. Everything else here
+       is a fixed value on purpose: re-tinting it to a brand palette
+       destroys the signal. */
+    --fm-web-callout-info-bg:     var(--fm-web-primary-tint);
+    --fm-web-callout-info-border: var(--fm-web-primary-deep);
+    --fm-web-callout-info-text:   var(--fm-web-text);
+
+    --fm-web-callout-warn-bg:     #fdf3d2;
+    --fm-web-callout-warn-border: var(--fm-web-status-warn);
+    --fm-web-callout-warn-text:   #5a4308;
+
+    --fm-web-callout-error-bg:     #fbe5dc;
+    --fm-web-callout-error-border: var(--fm-web-status-error);
+    --fm-web-callout-error-text:   #6b2410;
+
+    --fm-web-callout-success-bg:     #e2efd9;
+    --fm-web-callout-success-border: var(--fm-web-status-success);
+    --fm-web-callout-success-text:   #1f4d27;
+
+    --fm-web-callout-legal-bg:     #eceef0;
+    --fm-web-callout-legal-border: #6b6f63;
+    --fm-web-callout-legal-text:   var(--fm-web-text);
+
+    /* === Tag modifiers =====================================================
+       Same semantic family as callout, but tighter values and tokens of its
+       own. Deliberately not reused: tag padding and type may diverge from
+       callout without anyone having to recolour a shared token. */
+    --fm-web-tag-ok-bg:        #e2efd9;
+    --fm-web-tag-ok-text:      #1f4d27;
+    --fm-web-tag-warn-bg:      #fdf3d2;
+    --fm-web-tag-warn-text:    #5a4308;
+    --fm-web-tag-error-bg:     #fbe5dc;
+    --fm-web-tag-error-text:   #6b2410;
+    --fm-web-tag-neutral-bg:   var(--fm-web-surface-sunk);
+    --fm-web-tag-neutral-text: var(--fm-web-text-soft);
+    --fm-web-tag-info-bg:      var(--fm-web-primary-tint);
+    --fm-web-tag-info-text:    var(--fm-web-primary-deep);
+
+    /* === Form primitives ===================================================
+       Tokens for the .fm-input family, so a consumer can override one value
+       without duplicating the component selectors. */
+    --fm-web-input-bg:             var(--fm-web-surface);
+    --fm-web-input-border:         var(--fm-web-hairline);
+    --fm-web-input-border-focus:   var(--fm-web-primary-deep);
+    --fm-web-input-border-invalid: var(--fm-web-status-error);
+    --fm-web-input-text:           var(--fm-web-text);
+    --fm-web-input-placeholder:    var(--fm-web-text-mute);
+    --fm-web-input-radius:         var(--fm-web-radius-control);
+    --fm-web-input-padding-x:      0.7rem;
+    --fm-web-input-padding-y:      0.5rem;
+    --fm-web-input-disabled-bg:    var(--fm-web-surface-sunk);
+    --fm-web-input-disabled-text:  var(--fm-web-text-mute);
+
+    /* Touch-target floor (WCAG 2.5.5 AAA / 2.5.8 AA, 44px). Override it for
+       pointer-only contexts if you want flatter inputs — the default is the
+       accessible one. */
+    --fm-web-input-min-h: 44px;
+
+    /* === Table (.fm-table) ===============================================
+       Head bg, stripe bg, hover bg, plus a border colour for cell
+       hairlines. Sticky head and sticky column use the opaque surface token
+       as their background — nothing may show through while scrolling. */
+    --fm-web-table-head-bg:    var(--fm-web-surface-sunk);
+    --fm-web-table-row-stripe: color-mix(in srgb,
+                                          var(--fm-web-primary-tint) 50%,
+                                          var(--fm-web-surface));
+    --fm-web-table-row-hover:  var(--fm-web-primary-tint);
+    --fm-web-table-border:     var(--fm-web-hairline);
+
+    /* === Dropzone (.fm-dropzone) =========================================
+       Four border tokens (idle/hover/dragover) and three background tokens
+       (idle/dragover/error). Idle is dashed, dragover filled; the state
+       change happens through the border colour and the bg token. */
+    --fm-web-dropzone-border:           var(--fm-web-hairline);
+    --fm-web-dropzone-border-hover:     var(--fm-web-primary);
+    --fm-web-dropzone-border-dragover:  var(--fm-web-primary-deep);
+    --fm-web-dropzone-bg-idle:          var(--fm-web-surface-sunk);
+    --fm-web-dropzone-bg-dragover:      var(--fm-web-primary-tint);
+    --fm-web-dropzone-bg-error:         var(--fm-web-callout-error-bg);
+
+    /* === Toast / toaster (.fm-toast, .fm-toaster) ========================
+       Four semantic colour trios (bg/border/text) — same family as callout,
+       separate tokens so toast padding and optics can move independently.
+       The toaster position is pulled out as overridable tokens so the
+       container can be repositioned without a CSS override. */
+    --fm-web-toast-info-bg:        var(--fm-web-primary-tint);
+    --fm-web-toast-info-border:    var(--fm-web-primary-deep);
+    --fm-web-toast-info-text:      var(--fm-web-text);
+
+    --fm-web-toast-success-bg:     #e2efd9;
+    --fm-web-toast-success-border: var(--fm-web-status-success);
+    --fm-web-toast-success-text:   #1f4d27;
+
+    --fm-web-toast-warn-bg:        #fdf3d2;
+    --fm-web-toast-warn-border:    var(--fm-web-status-warn);
+    --fm-web-toast-warn-text:      #5a4308;
+
+    --fm-web-toast-error-bg:       #fbe5dc;
+    --fm-web-toast-error-border:   var(--fm-web-status-error);
+    --fm-web-toast-error-text:     #6b2410;
+
+    --fm-web-toaster-position-bottom: 1.25rem;
+    --fm-web-toaster-position-right:  1.25rem;
+
+    /* === Toolbar (.fm-toolbar) ===========================================
+       Sticky action bar for bulk actions. Sticks to the bottom of the
+       viewport by default; the --top variant flips it. The shadow is
+       elevation, not a brand effect. */
+    --fm-web-toolbar-bg:        var(--fm-web-surface);
+    --fm-web-toolbar-border:    var(--fm-web-hairline);
+    --fm-web-toolbar-shadow:    0 -2px 8px rgba(31,38,28,.08);
+    --fm-web-toolbar-padding-x: var(--fm-space-3);
+    --fm-web-toolbar-padding-y: var(--fm-space-2);
+  }
+}
+
+/* ========================================================================= *
+ * COMPONENTS                                                                *
+ * Flat, single-class selectors under the .fm- prefix — never a bare tag      *
+ * selector. Every value points at an --fm-* token.                          *
+ * ========================================================================= */
+
+/* === Layout / Seitenstruktur ============================================= */
+
+.fm-container {
+  max-width: var(--fm-container-max);
+  margin-inline: auto;
+  padding-inline: var(--fm-space-4);
+}
+
+.fm-grid {
+  display: grid;
+  gap: var(--fm-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.fm-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.fm-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 36rem) {
+  .fm-grid--2,
+  .fm-grid--3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fm-section {
+  padding-block: var(--fm-space-6);
+}
+
+/* === Header / Navigation ================================================= */
+
+/* White brand bar with a primary-coloured accent rule. For a solid, darker
+   bar instead, add .fm-header--dark (below). */
+.fm-header {
+  background: var(--fm-web-surface);
+  border-bottom: 3px solid var(--fm-web-primary);
+  box-shadow: 0 1px 3px rgba(31,38,28,.06);
+}
+
+.fm-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--fm-space-3);
+  max-width: var(--fm-web-page-max);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  padding-block: 0.85rem;
+}
+
+.fm-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+}
+
+.fm-header__logo {
+  height: 56px;
+  width: auto;
+  display: block;
+}
+
+.fm-header__wordmark {
+  font-family: var(--fm-font-headline);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--fm-web-text);
+  letter-spacing: 0.01em;
+}
+
+/* Navigation zone to the right of the wordmark. Takes the menu list plus
+   any extras (support link, tool controls) and lays them out in one row,
+   evenly spaced, right-aligned and vertically centred. Without this rule
+   multiple children fall into default flow and collide. */
+.fm-header__nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.fm-header__nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.fm-header__nav-list a {
+  font-family: var(--fm-font-headline);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--fm-web-primary-deep);
+  text-decoration: none;
+}
+
+.fm-header__nav-list a:hover {
+  text-decoration: underline;
+}
+
+/* Support / contact link in the navigation zone — a direct line to whoever
+   maintains the tool. Soft text colour at rest, primary on hover and focus.
+   On narrow viewports only the icon remains (label hidden) so the brand bar
+   does not wrap. It lives in the system so every tool carries the same
+   contact point instead of each repo inventing one. */
+.fm-header__support {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--fm-font-headline);
+  font-size: 0.95rem;
+  color: var(--fm-web-text-soft);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.fm-header__support:hover,
+.fm-header__support:focus-visible {
+  color: var(--fm-web-primary-deep);
+}
+
+.fm-header__support-icon {
+  flex: none;
+}
+
+@media (max-width: 48rem) {
+  .fm-header__support-label {
+    display: none;
+  }
+  /* Tighter brand bar on narrow viewports: smaller logo, less padding,
+     closer spacing. Navigation often wraps to a second row here, so every
+     row should build as flat as possible. */
+  .fm-header__inner {
+    padding-block: 0.55rem;
+    gap: 0.3rem 1rem;
+  }
+  .fm-header__logo {
+    height: 40px;
+  }
+  .fm-header__nav-list {
+    gap: 1rem;
+  }
+}
+
+/* Brand text block: stacks the wordmark and an optional sub-brand line
+   (e.g. "A project by <organisation>") vertically next to the logo. */
+.fm-header__brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  line-height: 1.1;
+}
+
+.fm-header__subbrand {
+  font-family: var(--fm-font-headline);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--fm-web-text-soft);
+  line-height: 1.2;
+}
+
+.fm-header__nav-current {
+  border-bottom: 2px solid var(--fm-web-primary);
+  padding-bottom: 2px;
+}
+
+@media (max-width: 30rem) {
+  .fm-header__logo {
+    height: 34px;
+  }
+  .fm-header__wordmark {
+    font-size: 1.2rem;
+  }
+  .fm-header__nav-list {
+    gap: 0.85rem;
+  }
+}
+
+/* Opt-in solid brand bar: primary background instead of white. */
+.fm-header--dark {
+  background: var(--fm-color-primary);
+  border-bottom: none;
+  color: var(--fm-color-on-primary);
+  box-shadow: none;
+}
+
+.fm-header--dark .fm-header__wordmark {
+  color: var(--fm-color-white);
+}
+
+.fm-header--dark .fm-header__nav-list a {
+  color: var(--fm-color-white);
+}
+
+/* Compact modifier for search-first layouts. The default header wraps
+   .fm-header__inner onto a second row past five children (flex-wrap:wrap).
+   With .fm-header--compact everything stays on one line: no wrap, reduced
+   padding, truncation allowed on the sub-elements (min-width: 0 +
+   overflow:hidden + ellipsis). Use it for a tight brand bar plus search
+   trigger plus nav; the plain .fm-header is unaffected. */
+.fm-header--compact .fm-header__inner {
+  flex-wrap: nowrap;
+  gap: var(--fm-space-2);
+  padding-block: var(--fm-space-2);
+  padding-inline: clamp(0.75rem, 3vw, 1.75rem);
+}
+
+.fm-header--compact .fm-header__brand {
+  min-width: 0;
+  gap: 0.5rem;
+}
+
+.fm-header--compact .fm-header__wordmark {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fm-header--compact .fm-header__nav,
+.fm-header--compact .fm-header__nav-list {
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.fm-header--compact .fm-header__nav-list a {
+  white-space: nowrap;
+}
+
+.fm-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fm-space-4);
+  align-items: center;
+}
+
+.fm-nav__link {
+  font-family: var(--fm-font-copy);
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+  padding-bottom: var(--fm-space-1);
+  border-bottom: var(--fm-border-width) solid transparent;
+}
+
+.fm-nav__link:hover,
+.fm-nav__link:focus-visible {
+  border-bottom-color: var(--fm-color-highlight);
+}
+
+.fm-nav__link--active {
+  border-bottom-color: var(--fm-color-highlight);
+}
+
+/* === Tool navigation (tab bar) =========================================== */
+/* Horizontal section navigation, meant to sit directly under the page
+   headline in the main container — the quiet alternative to a vertical side
+   menu. Tabs sit on a hairline baseline; the active tab carries a deep
+   primary marker, hover and focus a lighter one. Wraps on narrow viewports
+   (no hamburger). Optional group labels structure longer navigations
+   without needing a side menu. */
+.fm-toolnav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0 var(--fm-space-1);
+  border-bottom: var(--fm-border-width) solid var(--fm-web-hairline);
+  /* Never wider than the container — tabs wrap rather than growing past the
+     viewport horizontally on mobile. */
+  max-width: 100%;
+}
+
+.fm-toolnav__group {
+  display: inline-flex;
+  /* Wrap inside a group too: otherwise a wide group (several stage tabs,
+     say) stays on one line and blows out narrow viewports. min-width:0 lets
+     the flex item shrink below its content width so the wrap can happen. */
+  flex-wrap: wrap;
+  min-width: 0;
+  align-items: center;
+  gap: var(--fm-space-1);
+}
+
+/* Group label — a small, quiet mono caption ahead of a tab group. */
+.fm-toolnav__label {
+  align-self: center;
+  padding: 0 var(--fm-space-2) 0 var(--fm-space-3);
+  font-family: var(--fm-font-mono);
+  font-size: var(--fm-text-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fm-web-text-mute);
+}
+.fm-toolnav__group:first-child .fm-toolnav__label {
+  padding-left: 0;
+}
+
+.fm-toolnav__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fm-space-2);
+  font-family: var(--fm-font-copy);
+  font-weight: 600;
+  color: var(--fm-web-text-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: var(--fm-space-2) var(--fm-space-3);
+  border-bottom: var(--fm-border-width) solid transparent;
+  margin-bottom: calc(-1 * var(--fm-border-width));
+  border-top-left-radius: var(--fm-radius-sm, 6px);
+  border-top-right-radius: var(--fm-radius-sm, 6px);
+  transition:
+    color 120ms ease,
+    border-color 120ms ease,
+    background 120ms ease;
+}
+.fm-toolnav__item:hover,
+.fm-toolnav__item:focus-visible {
+  color: var(--fm-web-text);
+  background: var(--fm-web-primary-tint);
+  border-bottom-color: var(--fm-web-primary);
+}
+.fm-toolnav__item--active,
+.fm-toolnav__item[aria-current='page'] {
+  color: var(--fm-web-primary-deep);
+  border-bottom-color: var(--fm-web-primary-deep);
+}
+
+/* Disabled tab — planned or deferred steps stay visible but are clearly
+   marked as not clickable. */
+.fm-toolnav__item--disabled,
+.fm-toolnav__item[aria-disabled='true'] {
+  color: var(--fm-web-text-mute);
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  border-bottom-color: transparent;
+  background: none;
+}
+
+/* === Typografie ========================================================== */
+
+.fm-headline {
+  font-family: var(--fm-font-headline);
+  font-weight: 800;
+  font-size: var(--fm-text-h1);
+  line-height: var(--fm-leading-headline);
+  color: var(--fm-color-text);
+}
+
+.fm-subline {
+  font-family: var(--fm-font-headline);
+  font-weight: 600;
+  font-size: var(--fm-text-subline);
+  line-height: var(--fm-leading-headline);
+  color: var(--fm-color-text);
+}
+
+/* Deutsche Komposita brechen sauber — Headline-Klassen, neue Hero-/
+   Section-Head-/Panel-Header-Klassen (Tasks 7/8) erben das Verhalten. */
+.fm-headline,
+.fm-subline,
+.fm-section-head h2,
+.fm-hero__title,
+.fm-panel__head h3 {
+  hyphens: auto;
+}
+
+.fm-prose {
+  font-family: var(--fm-font-copy);
+  font-weight: 400;
+  font-size: var(--fm-text-copy);
+  line-height: var(--fm-leading-copy);
+  color: var(--fm-color-text);
+}
+
+.fm-emphasis {
+  font-family: var(--fm-font-emphasis);
+  font-style: italic;
+  font-weight: 900;
+  line-height: var(--fm-leading-copy);
+  color: var(--fm-color-text);
+}
+
+/* === Buttons ============================================================= */
+
+.fm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fm-space-2);
+  padding: var(--fm-space-2) var(--fm-space-4);
+  border: var(--fm-border-width) solid transparent;
+  border-radius: var(--fm-radius-sm);
+  font-family: var(--fm-font-copy);
+  font-weight: 700;
+  font-size: var(--fm-text-copy);
+  line-height: var(--fm-leading-copy);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.fm-btn:focus-visible {
+  outline: var(--fm-border-width) solid var(--fm-color-primary);
+  outline-offset: var(--fm-space-1);
+}
+
+.fm-btn--primary {
+  background: var(--fm-color-primary);
+  color: var(--fm-color-on-primary);
+}
+
+.fm-btn--primary:hover {
+  filter: brightness(0.92);
+}
+
+.fm-btn--secondary {
+  background: transparent;
+  color: var(--fm-color-primary);
+  border-color: var(--fm-color-primary);
+}
+
+.fm-btn--secondary:hover {
+  background: var(--fm-color-primary);
+  color: var(--fm-color-on-primary);
+}
+
+/* === Cards and surfaces ================================================== */
+
+.fm-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fm-space-3);
+  padding: var(--fm-space-5);
+  border-radius: var(--fm-radius-md);
+}
+
+.fm-card--primary {
+  background: var(--fm-color-primary);
+  color: var(--fm-color-on-primary);
+}
+
+.fm-card--secondary {
+  background: var(--fm-color-secondary);
+  color: var(--fm-color-on-secondary);
+}
+
+.fm-card__title {
+  font-family: var(--fm-font-headline);
+  font-weight: 700;
+  font-size: var(--fm-text-h3);
+  line-height: var(--fm-leading-headline);
+}
+
+.fm-card__body {
+  font-family: var(--fm-font-copy);
+  font-size: var(--fm-text-copy);
+  line-height: var(--fm-leading-copy);
+}
+
+/* === CD-Gestaltungselemente ============================================== */
+
+.fm-underline {
+  border-bottom: var(--fm-border-width) solid var(--fm-color-accent);
+  padding-bottom: var(--fm-space-1);
+}
+
+.fm-highlight {
+  background: var(--fm-color-highlight);
+  color: var(--fm-color-text);
+  padding: 0 var(--fm-space-1);
+}
+
+.fm-badge {
+  display: inline-block;
+  padding: var(--fm-space-2) var(--fm-space-4);
+  border-radius: var(--fm-radius-sm);
+  font-family: var(--fm-font-headline);
+  font-weight: 900;
+  line-height: var(--fm-leading-headline);
+  text-align: center;
+  transform: rotate(-6deg);
+}
+
+.fm-badge--highlight {
+  background: var(--fm-color-highlight);
+  color: var(--fm-color-text);
+}
+
+.fm-badge--accent {
+  background: var(--fm-color-accent);
+  color: var(--fm-color-on-primary);
+}
+
+/* === Data-tool components =================================================
+   Panels frame blocks of content; metric cards show a single figure with a
+   semantic accent rule. Both use the web layer. */
+
+.fm-panel {
+  display: block;
+  background: var(--fm-web-surface);
+  border: 1px solid var(--fm-web-hairline);
+  border-radius: var(--fm-web-radius-card);
+  box-shadow: var(--fm-web-shadow);
+  margin: var(--fm-space-4) 0;
+  overflow: hidden;
+}
+
+.fm-panel__head {
+  padding: var(--fm-space-3) var(--fm-space-3) var(--fm-space-2);
+  border-bottom: 1px solid var(--fm-web-hairline);
+}
+
+.fm-panel__head h3 {
+  margin: 0;
+}
+
+.fm-panel__note {
+  margin: var(--fm-space-1) 0 0;
+  font-size: var(--fm-text-small);
+  color: var(--fm-web-text-soft);
+  max-width: 70rem;
+}
+
+.fm-panel__head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--fm-space-3);
+}
+
+.fm-panel__head-row > h3 {
+  flex: 1 1 auto;
+}
+
+.fm-panel__body {
+  padding: var(--fm-space-3);
+}
+
+.fm-panel__body--table {
+  padding: 0;
+}
+
+.fm-panel__body > :first-child { margin-top: 0; }
+.fm-panel__body > :last-child  { margin-bottom: 0; }
+
+.fm-panel:fullscreen {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--fm-web-surface);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.fm-panel:fullscreen > .fm-panel__head { flex: none; }
+
+.fm-panel:fullscreen > .fm-panel__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.fm-metric-card {
+  position: relative;
+  background: var(--fm-web-surface);
+  border: 1px solid var(--fm-web-hairline);
+  border-radius: var(--fm-web-radius-card);
+  box-shadow: var(--fm-web-shadow);
+  padding: var(--fm-space-3);
+  overflow: hidden;
+}
+
+.fm-metric-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--fm-metric-accent, var(--fm-web-primary));
+}
+
+.fm-metric-card--revenue  { --fm-metric-accent: var(--fm-web-chart-1); }
+.fm-metric-card--cost { --fm-metric-accent: var(--fm-web-chart-5); }
+.fm-metric-card--net   { --fm-metric-accent: var(--fm-web-chart-7); }
+
+.fm-metric-card--hero {
+  background: var(--fm-web-primary-tint);
+  --fm-metric-accent: var(--fm-web-primary-deep);
+}
+
+.fm-metric-card__num {
+  font-size: var(--fm-text-h2);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: var(--fm-web-text);
+}
+
+.fm-metric-card__label {
+  font-size: var(--fm-text-small);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--fm-web-text-soft);
+}
+
+/* === Content components ===================================================
+   Structural pieces for longer reading stretches: notices, section heads,
+   hero strips, tags and the skip link. */
+
+.fm-callout {
+  background: var(--fm-web-primary-tint);
+  border-left: 4px solid var(--fm-web-primary-deep);
+  border-radius: 0 var(--fm-web-radius-card) var(--fm-web-radius-card) 0;
+  padding: var(--fm-space-3) var(--fm-space-4);
+  margin: var(--fm-space-3) 0;
+  max-width: 70rem;
+  color: var(--fm-web-text);
+}
+
+.fm-callout > :first-child { margin-top: 0; }
+.fm-callout > :last-child  { margin-bottom: 0; }
+
+.fm-section-head { margin-bottom: var(--fm-space-4); }
+
+.fm-section-head h2 { margin-bottom: var(--fm-space-2); }
+
+.fm-section-head p {
+  margin: 0;
+  max-width: 70rem;
+  color: var(--fm-web-text-soft);
+}
+
+.fm-hero { margin: var(--fm-space-5) 0; }
+
+.fm-hero__title { margin: 0; }
+
+.fm-hero__intro {
+  margin: var(--fm-space-2) 0 0;
+  font-size: var(--fm-text-subline);
+  line-height: var(--fm-leading-copy);
+  max-width: 70rem;
+  color: var(--fm-web-text-soft);
+}
+
+.fm-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.15em 0.6em;
+  /* 4px mini-lozenge rather than a 999px pill — it sits better as an inline
+     tag inside tables and dense lists. The pill shape stays available as
+     opt-in via `.fm-tag { border-radius: 999px; }`. */
+  border-radius: var(--fm-web-radius-mini);
+  font-family: var(--fm-font-copy);
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.fm-tag--neutral {
+  background: var(--fm-web-surface-sunk);
+  color: var(--fm-web-text-soft);
+}
+
+.fm-tag--info {
+  background: var(--fm-web-primary-tint);
+  color: var(--fm-web-primary-deep);
+}
+
+.fm-tag--required {
+  background: color-mix(in srgb, var(--fm-web-primary-deep) 14%, white);
+  color: var(--fm-web-primary-deep);
+}
+
+.fm-tag--risk {
+  background: color-mix(in srgb, var(--fm-web-clay-text) 14%, white);
+  color: var(--fm-web-clay-text);
+}
+
+/* Search-highlight atom. The browser default for <mark> is a harsh yellow
+   that fights any palette. Native <mark> is reset through a :where()
+   selector so specificity stays (0,0,0) and a consumer can override without
+   !important; .fm-mark is the explicit atom for span-wrapping in render
+   pipelines (Pagefind, on-page search). */
+:where(mark),
+.fm-mark {
+  background: color-mix(in srgb, var(--fm-color-highlight) 55%, white);
+  color: var(--fm-color-text);
+  padding: 0 0.15em;
+  border-radius: 0.15em;
+  /* Inherits font-weight from the parent — a hit should lift out visually
+   without disturbing the reading flow. */
+  font-weight: inherit;
+}
+
+.fm-skiplink {
+  position: fixed;
+  top: -200%;
+  left: 0;
+  z-index: 999;
+  background: var(--fm-web-primary-deep);
+  color: var(--fm-color-white);
+  padding: var(--fm-space-2) var(--fm-space-3);
+  text-decoration: none;
+  font-family: var(--fm-font-copy);
+  font-weight: 700;
+  border-radius: 0 0 var(--fm-web-radius-control) 0;
+  transition: top 0.12s ease-out;
+}
+
+.fm-skiplink:focus { top: 0; }
+
+.fm-skiplink:focus-visible {
+  outline: 3px solid var(--fm-color-highlight);
+  outline-offset: -3px;
+}
+
+/* === Controls =============================================================
+   Tab bar with folder-tab optics (inset shadow as the active marker) and a
+   segment switcher for toggle groups. Attach your own JS listeners; they
+   toggle the .is-active class between the buttons. */
+
+.fm-tabbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  border-bottom: 1px solid var(--fm-web-hairline);
+}
+
+.fm-tab {
+  font: inherit;
+  font-size: 1.08rem;
+  cursor: pointer;
+  padding: 0.62rem 1.2rem;
+  border: 1px solid transparent;
+  border-bottom: none;
+  background: transparent;
+  color: var(--fm-web-text-soft);
+  border-radius: var(--fm-web-radius-control)
+                 var(--fm-web-radius-control) 0 0;
+  margin-bottom: -1px;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.fm-tab:hover {
+  color: var(--fm-web-text);
+  background: color-mix(in srgb, var(--fm-web-primary) 9%, transparent);
+}
+
+.fm-tab.is-active {
+  background: var(--fm-web-surface);
+  border-color: var(--fm-web-hairline);
+  color: var(--fm-web-primary-deep);
+  font-weight: 700;
+  box-shadow: inset 0 -3px 0 var(--fm-web-primary-deep);
+}
+
+/* The tab sits flush with the edge — negative focus offset */
+.fm-tab { --fm-web-focus-offset: -2px; }
+
+.fm-tab-panel { display: none; }
+
+.fm-tab-panel.is-active {
+  display: block;
+  animation: fm-tab-panel-in 0.18s ease-out;
+}
+
+@keyframes fm-tab-panel-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fm-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.55rem;
+  align-items: baseline;
+}
+
+.fm-switcher__label {
+  font-size: 0.82rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--fm-web-text-soft);
+  margin-right: 0.35rem;
+}
+
+.fm-switch-btn {
+  font: inherit;
+  font-size: 0.98rem;
+  cursor: pointer;
+  padding: 0.42rem 1rem;
+  border: 1px solid var(--fm-web-hairline);
+  background: var(--fm-web-surface);
+  color: var(--fm-web-text);
+  border-radius: var(--fm-web-radius-control);
+  line-height: 1.2;
+  transition: background 0.15s, border-color 0.15s, color 0.15s,
+              transform 0.1s;
+}
+
+.fm-switch-btn:hover {
+  border-color: var(--fm-web-primary);
+  background: var(--fm-web-primary-tint);
+}
+
+.fm-switch-btn:not(.is-active):active {
+  background: color-mix(in srgb, var(--fm-web-primary) 22%, white);
+  transform: translateY(1px);
+}
+
+.fm-switch-btn.is-active {
+  background: var(--fm-web-primary-deep);
+  border-color: var(--fm-web-primary-deep);
+  color: var(--fm-color-white);
+  font-weight: 600;
+}
+
+.fm-switch-btn.is-active:hover {
+  background: var(--fm-web-primary-deep);
+  color: var(--fm-color-white);
+}
+
+/* === Form primitives ======================================================
+   Input building blocks for data tools. Behaviour — validation, submit — is
+   yours; this provides optics plus states. Native HTML elements take the
+   class directly; there is no mandatory wrapper beyond the optional
+   .fm-field. */
+
+.fm-input,
+.fm-select,
+.fm-textarea {
+  display: block;
+  width: 100%;
+  font-family: var(--fm-font-copy);
+  font-size: var(--fm-text-copy);
+  line-height: var(--fm-leading-copy);
+  color: var(--fm-web-input-text);
+  background: var(--fm-web-input-bg);
+  border: 1px solid var(--fm-web-input-border);
+  border-radius: var(--fm-web-input-radius);
+  padding: var(--fm-web-input-padding-y) var(--fm-web-input-padding-x);
+  /* WCAG touch-target floor (44px). Padding is unchanged; min-height only
+     bites when the rendered value would otherwise fall below it. Override
+     the token for a denser look. */
+  min-height: var(--fm-web-input-min-h, 44px);
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.fm-input:hover,
+.fm-select:hover,
+.fm-textarea:hover {
+  border-color: color-mix(in srgb, var(--fm-web-primary-deep) 50%,
+                          var(--fm-web-input-border));
+}
+
+.fm-input::placeholder,
+.fm-textarea::placeholder {
+  color: var(--fm-web-input-placeholder);
+  opacity: 1;
+}
+
+.fm-input:focus-visible,
+.fm-select:focus-visible,
+.fm-textarea:focus-visible {
+  outline: none;
+  border-color: var(--fm-web-input-border-focus);
+  box-shadow: var(--fm-web-focus-ring);
+}
+
+.fm-input:disabled,
+.fm-select:disabled,
+.fm-textarea:disabled {
+  background: var(--fm-web-input-disabled-bg);
+  color: var(--fm-web-input-disabled-text);
+  cursor: not-allowed;
+}
+
+.fm-input[readonly],
+.fm-textarea[readonly] {
+  background: var(--fm-web-surface-sunk);
+  color: var(--fm-web-text-soft);
+}
+
+.fm-input[aria-invalid="true"],
+.fm-input.is-invalid,
+.fm-select[aria-invalid="true"],
+.fm-select.is-invalid,
+.fm-textarea[aria-invalid="true"],
+.fm-textarea.is-invalid {
+  border-color: var(--fm-web-input-border-invalid);
+}
+
+.fm-input[aria-invalid="true"]:focus-visible,
+.fm-input.is-invalid:focus-visible,
+.fm-select[aria-invalid="true"]:focus-visible,
+.fm-select.is-invalid:focus-visible,
+.fm-textarea[aria-invalid="true"]:focus-visible,
+.fm-textarea.is-invalid:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb,
+              var(--fm-web-input-border-invalid) 28%, transparent);
+}
+
+.fm-textarea {
+  min-height: calc(var(--fm-web-input-padding-y) * 2 + 4.5em);
+  resize: vertical;
+}
+
+/* Select gets a quiet chevron indicator and room on the right so the UA's
+   own arrow does not overlap the text. The SVG is an inline data: URI with
+   no base64; override background-image for your own icon. */
+.fm-select {
+  appearance: none;
+  padding-right: calc(var(--fm-web-input-padding-x) + 1.25rem);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%235a616b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M1 1.5l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--fm-web-input-padding-x) center;
+  background-size: 0.75rem 0.5rem;
+}
+
+/* Checkbox and radio: native inputs restyled through accent-color, so the
+   native behaviour is kept with no JS replacement. */
+.fm-checkbox,
+.fm-radio {
+  appearance: auto;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  accent-color: var(--fm-web-primary-deep);
+  cursor: pointer;
+}
+
+.fm-checkbox:disabled,
+.fm-radio:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.fm-checkbox:focus-visible,
+.fm-radio:focus-visible {
+  outline: 2px solid var(--fm-web-primary-deep);
+  outline-offset: var(--fm-web-focus-offset, 2px);
+}
+
+/* Label layout for checkbox/radio plus the group wrapper. Wrap a single
+   checkbox or radio in .fm-check; collect several radios in
+   .fm-radio-group (a vertical list). */
+.fm-check {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--fm-space-2);
+  font-family: var(--fm-font-copy);
+  font-size: var(--fm-text-copy);
+  line-height: var(--fm-leading-copy);
+  color: var(--fm-web-text);
+  cursor: pointer;
+}
+
+.fm-check > input { margin-top: 0.2em; flex: none; }
+
+.fm-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fm-space-2);
+}
+
+.fm-radio-group--inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--fm-space-3);
+}
+
+/* Range — desaturated slider. Track and thumb follow the web tokens. */
+.fm-range {
+  width: 100%;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.fm-range:focus-visible { outline: none; }
+
+.fm-range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: var(--fm-web-hairline);
+  border-radius: 999px;
+}
+
+.fm-range::-moz-range-track {
+  height: 4px;
+  background: var(--fm-web-hairline);
+  border-radius: 999px;
+}
+
+.fm-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--fm-web-primary-deep);
+  border: 2px solid var(--fm-web-surface);
+  margin-top: -0.45rem;
+  box-shadow: 0 1px 3px rgba(31,38,28,.18);
+}
+
+.fm-range::-moz-range-thumb {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--fm-web-primary-deep);
+  border: 2px solid var(--fm-web-surface);
+  box-shadow: 0 1px 3px rgba(31,38,28,.18);
+}
+
+.fm-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: var(--fm-web-focus-ring);
+}
+
+.fm-range:focus-visible::-moz-range-thumb {
+  box-shadow: var(--fm-web-focus-ring);
+}
+
+/* Field-Wrapper: Label oben, Hint klein darunter, Error rot. Hilfssache —
+   no wrapper is required, but this one is offered for compact layouts. */
+.fm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 32rem;
+}
+
+.fm-field__label {
+  font-family: var(--fm-font-copy);
+  font-weight: 600;
+  font-size: var(--fm-text-copy);
+  color: var(--fm-web-text);
+}
+
+.fm-field__hint {
+  font-size: var(--fm-text-small);
+  color: var(--fm-web-text-soft);
+  line-height: var(--fm-leading-copy);
+}
+
+.fm-field__error {
+  font-size: var(--fm-text-small);
+  color: var(--fm-web-input-border-invalid);
+  line-height: var(--fm-leading-copy);
+}
+
+/* === Modal / dialog =======================================================
+   An opt-in class for the native <dialog>. You supply the markup and the
+   open/close logic (showModal()/close()); this supplies backdrop, shadow,
+   radius and the sub-element layout. */
+
+.fm-modal {
+  background: var(--fm-web-modal-bg);
+  color: var(--fm-web-text);
+  border: none;
+  border-radius: var(--fm-web-modal-radius);
+  box-shadow: var(--fm-web-modal-shadow);
+  padding: 0;
+  max-width: min(40rem, 92vw);
+  width: 100%;
+}
+
+.fm-modal::backdrop {
+  background: var(--fm-web-modal-backdrop);
+}
+
+.fm-modal--blur::backdrop {
+  backdrop-filter: blur(3px);
+}
+
+.fm-modal--wide { max-width: min(64rem, 94vw); }
+.fm-modal--narrow { max-width: min(28rem, 90vw); }
+
+.fm-modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--fm-space-3);
+  padding: var(--fm-space-3) var(--fm-space-4);
+  border-bottom: 1px solid var(--fm-web-hairline);
+}
+
+.fm-modal__title {
+  font-family: var(--fm-font-headline);
+  font-weight: 700;
+  font-size: var(--fm-text-h3);
+  line-height: var(--fm-leading-headline);
+  color: var(--fm-web-text);
+  margin: 0;
+}
+
+.fm-modal__close {
+  flex: none;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--fm-web-text-soft);
+  border-radius: var(--fm-web-radius-control);
+  padding: 0.2rem 0.55rem;
+  line-height: 1;
+  font-size: 1.25rem;
+}
+
+.fm-modal__close:hover {
+  background: var(--fm-web-surface-sunk);
+  color: var(--fm-web-text);
+}
+
+.fm-modal__close:focus-visible {
+  outline: 2px solid var(--fm-web-primary-deep);
+  outline-offset: var(--fm-web-focus-offset, 2px);
+}
+
+.fm-modal__body {
+  padding: var(--fm-space-3) var(--fm-space-4);
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.fm-modal__body > :first-child { margin-top: 0; }
+.fm-modal__body > :last-child  { margin-bottom: 0; }
+
+.fm-modal__actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--fm-space-2);
+  padding: var(--fm-space-3) var(--fm-space-4);
+  border-top: 1px solid var(--fm-web-hairline);
+  background: var(--fm-web-modal-bg);
+  border-radius: 0 0 var(--fm-web-modal-radius) var(--fm-web-modal-radius);
+}
+
+/* === v2.1 — Callout-Modifier ============================================
+   The base .fm-callout carries a primary left rule. The modifiers swap
+   bg/border/text through the semantic token family. .--info is
+   explizit als Default-Stil notiert (visuell identisch zum unbenannten
+   .fm-callout, aber semantisch eindeutig). */
+
+.fm-callout--info {
+  background: var(--fm-web-callout-info-bg);
+  border-left-color: var(--fm-web-callout-info-border);
+  color: var(--fm-web-callout-info-text);
+}
+
+.fm-callout--warn {
+  background: var(--fm-web-callout-warn-bg);
+  border-left-color: var(--fm-web-callout-warn-border);
+  color: var(--fm-web-callout-warn-text);
+}
+
+.fm-callout--error,
+.fm-callout--danger {
+  background: var(--fm-web-callout-error-bg);
+  border-left-color: var(--fm-web-callout-error-border);
+  color: var(--fm-web-callout-error-text);
+}
+
+.fm-callout--success {
+  background: var(--fm-web-callout-success-bg);
+  border-left-color: var(--fm-web-callout-success-border);
+  color: var(--fm-web-callout-success-text);
+}
+
+.fm-callout--legal {
+  background: var(--fm-web-callout-legal-bg);
+  border-left-color: var(--fm-web-callout-legal-border);
+  color: var(--fm-web-callout-legal-text);
+}
+
+/* Optional lead slot for "Note:" / "Important:" style prefixes ahead of the
+   callout body, replacing a hand-written <strong>. Bold plus a little
+   bottom spacing so the following paragraph still reads as one block. */
+.fm-callout__lead {
+  display: block;
+  font-weight: 700;
+  margin-bottom: var(--fm-space-1);
+  /* Erbt color vom Callout — der Lead-Slot soll innerhalb jeder
+     semantischen Variante mitlaufen, ohne eigene Token-Trios zu brauchen. */
+}
+
+/* Optional icon slot: a container, not an image asset. Put an SVG — or a
+   single letter — inside it. */
+.fm-callout__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: 0.45em;
+  flex: none;
+  vertical-align: -0.2em;
+}
+
+.fm-callout__icon > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* === Tag modifiers (semantic) =============================================
+   Two families in one: structural (--neutral, --info, --required, --risk)
+   and status (--ok/--success, --warn, --error/--danger). The status ones
+   take their colour from the non-themeable status tokens. */
+
+.fm-tag--ok,
+.fm-tag--success {
+  background: var(--fm-web-tag-ok-bg);
+  color: var(--fm-web-tag-ok-text);
+}
+
+.fm-tag--warn {
+  background: var(--fm-web-tag-warn-bg);
+  color: var(--fm-web-tag-warn-text);
+}
+
+.fm-tag--error,
+.fm-tag--danger {
+  background: var(--fm-web-tag-error-bg);
+  color: var(--fm-web-tag-error-text);
+}
+
+/* === Table (.fm-table) ====================================================
+   Data table with a sticky head, optional zebra striping, compact and dense
+   variants, a numeric-column helper and a sticky-first-column variant for
+   wide comparison tables. Optics only: sorting and selection are yours to
+   implement, toggling the .is-active / .is-selected state classes. */
+
+.fm-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--fm-font-copy);
+  font-size: var(--fm-text-copy);
+  line-height: var(--fm-leading-copy);
+  color: var(--fm-web-text);
+  background: var(--fm-web-surface);
+}
+
+.fm-table th,
+.fm-table td {
+  padding: var(--fm-space-2) var(--fm-space-3);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--fm-web-table-border);
+}
+
+.fm-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--fm-web-table-head-bg);
+  font-family: var(--fm-font-headline);
+  font-weight: 700;
+  font-size: var(--fm-text-small);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fm-web-text-soft);
+  border-bottom: 2px solid var(--fm-web-table-border);
+}
+
+.fm-table tfoot td {
+  background: var(--fm-web-surface-sunk);
+  font-weight: 600;
+  border-top: 2px solid var(--fm-web-table-border);
+  border-bottom: none;
+}
+
+.fm-table tbody tr:hover {
+  background: var(--fm-web-table-row-hover);
+}
+
+/* Zebra — alternating row backgrounds. The stripe sits BELOW the hover
+   background in the cascade, so hover still wins. */
+.fm-table--zebra tbody tr:nth-child(even) {
+  background: var(--fm-web-table-row-stripe);
+}
+
+.fm-table--zebra tbody tr:nth-child(even):hover {
+  background: var(--fm-web-table-row-hover);
+}
+
+/* Compact — reduced cell padding for dense lists. */
+.fm-table--compact th,
+.fm-table--compact td {
+  padding: var(--fm-space-1) var(--fm-space-2);
+}
+
+/* Dense — micro type for data-heavy tables (sub-labels,
+   Vergleichstabellen). Nutzt --fm-text-micro aus v2.1.1. */
+.fm-table--dense {
+  font-size: var(--fm-text-micro);
+}
+
+.fm-table--dense th,
+.fm-table--dense td {
+  padding: var(--fm-space-1) var(--fm-space-2);
+}
+
+/* Sticky first column — for wide comparison tables whose row labels live in
+   column 1. Only works together with .fm-table-scroll, because the
+   horizontal scroll container is what anchors the stickiness. */
+.fm-table--sticky-col tbody td:first-child,
+.fm-table--sticky-col tfoot td:first-child,
+.fm-table--sticky-col thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--fm-web-surface);
+}
+
+.fm-table--sticky-col thead th:first-child {
+  /* Head and sticky column cross over — the head background wins. */
+  z-index: 3;
+  background: var(--fm-web-table-head-bg);
+}
+
+.fm-table--sticky-col.fm-table--zebra tbody tr:nth-child(even) td:first-child {
+  background: var(--fm-web-table-row-stripe);
+}
+
+/* Numerische Spalte — rechtsbuendig + tabellarische Ziffern. */
+.fm-table__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Sortable-column helper — cursor, padding for the arrow slot, and an
+   .is-active state for the currently sorted column. The arrow is
+   CSS-Pseudo gerendert (kein Bild-Asset, kein DS-JS). */
+.fm-table__sortable {
+  cursor: pointer;
+  user-select: none;
+  padding-right: 1.5em;
+  position: relative;
+}
+
+.fm-table__sortable::after {
+  content: "";
+  position: absolute;
+  right: 0.6em;
+  top: 50%;
+  width: 0.55em;
+  height: 0.55em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-65%) rotate(45deg);
+  opacity: 0.3;
+}
+
+.fm-table__sortable:hover::after,
+.fm-table__sortable:focus-visible::after {
+  opacity: 0.7;
+}
+
+.fm-table__sortable.is-active::after {
+  opacity: 1;
+  color: var(--fm-web-primary-deep);
+}
+
+.fm-table__sortable.is-active.is-desc::after {
+  transform: translateY(-35%) rotate(-135deg);
+}
+
+/* Scrollable wrapper — horizontal scroll for wide tables. The inner table
+   defaults to min-width 100%; for genuinely wide content put e.g.
+   min-width: 60rem on the <table> itself. */
+.fm-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--fm-web-radius-card);
+  border: 1px solid var(--fm-web-table-border);
+}
+
+.fm-table-scroll > .fm-table {
+  min-width: 100%;
+}
+
+/* The sticky head needs the scroll container as its anchor. Without the
+   wrapper, in normal page flow, the head sticks to the top of the viewport
+   instead — which is the default behaviour, not a bug. */
+
+/* === Dropzone (.fm-dropzone) ==============================================
+   File-drop zone with idle, hover, dragover and error states. Optics only:
+   wire up the drag/drop listeners yourself and toggle .is-dragover and
+   .is-error. */
+
+.fm-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fm-space-2);
+  padding: var(--fm-space-5) var(--fm-space-4);
+  border: 2px dashed var(--fm-web-dropzone-border);
+  border-radius: var(--fm-web-radius-card);
+  background: var(--fm-web-dropzone-bg-idle);
+  color: var(--fm-web-text);
+  text-align: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.fm-dropzone:hover {
+  border-color: var(--fm-web-dropzone-border-hover);
+}
+
+.fm-dropzone.is-dragover {
+  border-style: solid;
+  border-color: var(--fm-web-dropzone-border-dragover);
+  background: var(--fm-web-dropzone-bg-dragover);
+}
+
+.fm-dropzone.is-error {
+  border-color: var(--fm-web-input-border-invalid);
+  background: var(--fm-web-dropzone-bg-error);
+  color: var(--fm-web-callout-error-text);
+}
+
+.fm-dropzone__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--fm-web-text-soft);
+}
+
+.fm-dropzone__icon > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.fm-dropzone__label {
+  font-family: var(--fm-font-headline);
+  font-weight: 700;
+  font-size: var(--fm-text-subline);
+  line-height: var(--fm-leading-headline);
+  margin: 0;
+}
+
+.fm-dropzone__hint {
+  font-size: var(--fm-text-small);
+  color: var(--fm-web-text-mute);
+  margin: 0;
+}
+
+.fm-dropzone__trigger {
+  margin-top: var(--fm-space-2);
+}
+
+/* === Toast / toaster (.fm-toast, .fm-toaster) =============================
+   Notification family. The toaster is the fixed-position container, the
+   toast a single message. Four severity variants via modifier. The slide-in
+   respects prefers-reduced-motion and falls back to a plain opacity fade.
+   Auto-dismiss is yours. */
+
+.fm-toaster {
+  position: fixed;
+  bottom: var(--fm-web-toaster-position-bottom);
+  right: var(--fm-web-toaster-position-right);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--fm-space-2);
+  max-width: min(28rem, calc(100vw - 2 * var(--fm-web-toaster-position-right)));
+  pointer-events: none;
+}
+
+.fm-toaster > .fm-toast {
+  pointer-events: auto;
+}
+
+@keyframes fm-toast-in {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fm-toast-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fm-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--fm-space-2);
+  padding: var(--fm-space-2) var(--fm-space-3);
+  border-radius: var(--fm-web-radius-card);
+  border-left: 4px solid var(--fm-web-toast-info-border);
+  background: var(--fm-web-toast-info-bg);
+  color: var(--fm-web-toast-info-text);
+  box-shadow: var(--fm-web-shadow-elevated);
+  animation: fm-toast-in 0.22s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fm-toast {
+    animation: fm-toast-fade 0.18s ease-out;
+  }
+}
+
+.fm-toast--info {
+  background: var(--fm-web-toast-info-bg);
+  border-left-color: var(--fm-web-toast-info-border);
+  color: var(--fm-web-toast-info-text);
+}
+
+.fm-toast--success {
+  background: var(--fm-web-toast-success-bg);
+  border-left-color: var(--fm-web-toast-success-border);
+  color: var(--fm-web-toast-success-text);
+}
+
+.fm-toast--warn {
+  background: var(--fm-web-toast-warn-bg);
+  border-left-color: var(--fm-web-toast-warn-border);
+  color: var(--fm-web-toast-warn-text);
+}
+
+.fm-toast--error {
+  background: var(--fm-web-toast-error-bg);
+  border-left-color: var(--fm-web-toast-error-border);
+  color: var(--fm-web-toast-error-text);
+}
+
+.fm-toast__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+  margin-top: 0.1rem;
+}
+
+.fm-toast__icon > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.fm-toast__body {
+  flex: 1;
+  font-size: var(--fm-text-copy);
+  line-height: var(--fm-leading-copy);
+}
+
+.fm-toast__body > :first-child { margin-top: 0; }
+.fm-toast__body > :last-child  { margin-bottom: 0; }
+
+.fm-toast__close {
+  flex: none;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  color: inherit;
+  border-radius: var(--fm-web-radius-control);
+  padding: 0.1rem 0.5rem;
+  line-height: 1;
+  font-size: 1.1rem;
+  opacity: 0.7;
+}
+
+.fm-toast__close:hover {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.fm-toast__close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* === Toolbar (.fm-toolbar) ================================================
+   Sticky action bar for bulk actions and selection operations. Sticks to the
+   bottom of the viewport by default; --top flips it. Flex layout with wrap,
+   a subtle shadow as elevation. */
+
+.fm-toolbar {
+  position: sticky;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--fm-space-3);
+  padding: var(--fm-web-toolbar-padding-y) var(--fm-web-toolbar-padding-x);
+  background: var(--fm-web-toolbar-bg);
+  border-top: 1px solid var(--fm-web-toolbar-border);
+  box-shadow: var(--fm-web-toolbar-shadow);
+}
+
+.fm-toolbar--top {
+  bottom: auto;
+  top: 0;
+  border-top: none;
+  border-bottom: 1px solid var(--fm-web-toolbar-border);
+  /* Schatten dreht — Elevation kommt jetzt von unten. */
+  box-shadow: 0 2px 8px rgba(31,38,28,.08);
+}
+
+.fm-toolbar__count {
+  font-family: var(--fm-font-headline);
+  font-weight: 700;
+  font-size: var(--fm-text-copy);
+  color: var(--fm-web-text);
+  margin-right: auto;
+}
+
+.fm-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fm-space-2);
+  margin-left: auto;
+}
+
+/* === Search (.fm-search) ==================================================
+   Search template: field plus result overlay. Two variants of one family:
+   (1) inline overlay dropdown — absolutely positioned, sits OVER the content
+   so there is no layout shift; (2) modal / Ctrl-K — reuses .fm-modal
+   (--blur --wide) with .fm-search--modal inside. The behaviour (open/close,
+   arrow-key navigation, ARIA combobox/listbox/option, focus trap in the
+   modal, prefers-reduced-motion) comes from the fm-search.js ES module;
+   this is optics plus state classes only. App specifics — filtering,
+   grouping, stemming — stay in the app. Composed entirely from existing
+   --fm-* tokens: no hard-coded colours, radii or fonts. */
+
+.fm-search {
+  position: relative;
+}
+
+.fm-search__field {
+  /* Optics come from .fm-input (also applied in the markup). This rule only
+   adds the search-specific part. */
+  padding-left: calc(var(--fm-web-input-padding-x) + 1.5rem);
+}
+
+.fm-search__icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--fm-web-input-min-h, 44px);
+  width: calc(var(--fm-web-input-padding-x) + 1.5rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fm-web-text-mute);
+  pointer-events: none;
+}
+
+.fm-search__icon > svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  display: block;
+}
+
+/* Inline overlay: takes NO space in flow, so there is no layout shift.
+   z-index 50 sits above sticky headers but below .fm-skiplink (999) and
+   .fm-toaster (1000). */
+.fm-search__overlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  margin-top: var(--fm-space-1);
+  background: var(--fm-web-surface);
+  border: 1px solid var(--fm-web-hairline);
+  border-radius: var(--fm-web-radius-card);
+  box-shadow: var(--fm-web-shadow-elevated);
+  overflow: hidden;
+  /* Default versteckt via [hidden]; sichtbar via .is-open. */
+  transform-origin: top center;
+  animation: fm-search-overlay-in 0.16s ease-out;
+}
+
+.fm-search__overlay[hidden] {
+  display: none;
+}
+
+@keyframes fm-search-overlay-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fm-search-overlay-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fm-search__overlay {
+    animation: fm-search-overlay-fade 0.14s ease-out;
+  }
+}
+
+.fm-search__results {
+  margin: 0;
+  padding: var(--fm-space-1);
+  list-style: none;
+  max-height: min(60vh, 28rem);
+  overflow-y: auto;
+}
+
+.fm-search__count {
+  padding: var(--fm-space-2) var(--fm-space-3);
+  font-family: var(--fm-font-copy);
+  font-size: var(--fm-text-small);
+  color: var(--fm-web-text-soft);
+  border-bottom: 1px solid var(--fm-web-hairline);
+}
+
+.fm-search__item {
+  display: block;
+  padding: var(--fm-space-2) var(--fm-space-3);
+  border-radius: var(--fm-web-radius-mini);
+  color: var(--fm-web-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.fm-search__item:hover {
+  background: var(--fm-web-primary-tint);
+}
+
+/* .is-active = aktives Item der Tastatur-Navigation (aria-activedescendant).
+   Sichtbarer Fokus-Ring via Token. */
+.fm-search__item.is-active {
+  background: var(--fm-web-primary-tint);
+  box-shadow: var(--fm-web-focus-ring);
+}
+
+.fm-search__item-title {
+  display: block;
+  font-family: var(--fm-font-copy);
+  font-weight: 700;
+  font-size: var(--fm-text-copy);
+  line-height: var(--fm-leading-copy);
+  color: var(--fm-web-text);
+}
+
+.fm-search__item-excerpt {
+  display: block;
+  margin-top: var(--fm-space-1);
+  font-size: var(--fm-text-small);
+  line-height: var(--fm-leading-copy);
+  color: var(--fm-web-text-soft);
+}
+
+/* Hit highlighting inside the excerpt — the adapter supplies <mark>, HTML-escaped. */
+.fm-search__item-excerpt mark {
+  background: var(--fm-web-primary-tint);
+  color: var(--fm-web-primary-deep);
+  padding: 0 0.1em;
+  border-radius: var(--fm-web-radius-mini);
+}
+
+.fm-search__item-badge {
+  display: inline-block;
+  margin-top: var(--fm-space-1);
+  padding: 0.1em 0.5em;
+  font-size: var(--fm-text-micro);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--fm-web-primary-deep);
+  background: var(--fm-web-surface-sunk);
+  border-radius: var(--fm-web-radius-mini);
+}
+
+/* The four states, unified: empty, hint, loading, no results. The module
+   sets the matching modifier. */
+.fm-search__state {
+  padding: var(--fm-space-3);
+  font-family: var(--fm-font-copy);
+  font-size: var(--fm-text-small);
+  color: var(--fm-web-text-soft);
+  text-align: center;
+}
+
+.fm-search__state--empty,
+.fm-search__state--hint {
+  color: var(--fm-web-text-mute);
+}
+
+.fm-search__state--loading {
+  color: var(--fm-web-text-soft);
+}
+
+.fm-search__state--no-results {
+  color: var(--fm-web-text-soft);
+}
+
+/* Header-Lupe-Trigger, der das Modal/Strg+K oeffnet. Touch-Floor 44px wie
+   .fm-input. Ersetzt app-lokale .fm-header__search-Kopien. */
+.fm-search-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fm-space-2);
+  min-height: var(--fm-web-input-min-h, 44px);
+  min-width: var(--fm-web-input-min-h, 44px);
+  padding: 0 var(--fm-space-3);
+  font: inherit;
+  font-family: var(--fm-font-copy);
+  color: var(--fm-web-text-soft);
+  background: var(--fm-web-surface);
+  border: 1px solid var(--fm-web-hairline);
+  border-radius: var(--fm-web-input-radius);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, color 0.15s;
+}
+
+.fm-search-trigger:hover {
+  color: var(--fm-web-text);
+  border-color: color-mix(in srgb, var(--fm-web-primary-deep) 50%,
+                          var(--fm-web-hairline));
+}
+
+.fm-search-trigger:focus-visible {
+  outline: none;
+  border-color: var(--fm-web-input-border-focus);
+  box-shadow: var(--fm-web-focus-ring);
+}
+
+.fm-search-trigger > svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+}
+
+/* Tastenkuerzel-Hinweis (Strg/Cmd+K) im Trigger. */
+.fm-search-trigger__kbd {
+  font-family: var(--fm-font-copy);
+  font-size: var(--fm-text-micro);
+  color: var(--fm-web-text-mute);
+  background: var(--fm-web-surface-sunk);
+  border: 1px solid var(--fm-web-hairline);
+  border-radius: var(--fm-web-radius-mini);
+  padding: 0.05em 0.4em;
+  line-height: 1.4;
+}
+
+/* Modal-Variante: das Feld IM .fm-modal (kombiniert mit .fm-modal--blur
+   --wide). Keine neue Modal-Shell. Auf schmalen Viewports Full-Screen —
+   100dvh statt 100vh wegen iOS-Safari-Adressleiste. */
+.fm-search--modal {
+  position: static;
+}
+
+.fm-search--modal .fm-search__overlay {
+  position: static;
+  margin-top: var(--fm-space-3);
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  animation: none;
+}
+
+@media (max-width: 640px) {
+  .fm-modal:has(.fm-search--modal) {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    max-width: 100vw;
+    width: 100vw;
+    border-radius: 0;
+  }
+
+  .fm-search--modal .fm-search__results {
+    max-height: none;
+  }
+}
+
+/* === High-contrast mode — hand-written component overrides =================
+   Switched on with .fm-mode-hc on <body> or any ancestor. The palette is
+   ink + highlight + accent, all drawn from the existing brand tokens — no
+   separate --fm-*-hc tokens are needed. */
+
+.fm-mode-hc body,
+.fm-mode-hc {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-header {
+  background: var(--fm-color-ink);
+  border-bottom-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-header__wordmark,
+.fm-mode-hc .fm-header__nav-list a {
+  color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-callout {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-left-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-panel,
+.fm-mode-hc .fm-metric-card {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-metric-card__num,
+.fm-mode-hc .fm-metric-card__label {
+  color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-btn--primary {
+  background: var(--fm-color-highlight);
+  color: var(--fm-color-ink);
+  border-color: var(--fm-color-ink);
+}
+
+.fm-mode-hc .fm-btn--secondary {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-tag--neutral,
+.fm-mode-hc .fm-tag--info,
+.fm-mode-hc .fm-tag--required,
+.fm-mode-hc .fm-tag--risk {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border: 1px solid var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-tab.is-active {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  box-shadow: inset 0 -3px 0 var(--fm-color-accent);
+}
+
+.fm-mode-hc .fm-switch-btn.is-active {
+  background: var(--fm-color-highlight);
+  color: var(--fm-color-ink);
+  border-color: var(--fm-color-ink);
+}
+
+.fm-mode-hc .fm-skiplink {
+  background: var(--fm-color-highlight);
+  color: var(--fm-color-ink);
+}
+
+/* High contrast for the form primitives: ink + highlight, accent for errors. */
+
+.fm-mode-hc .fm-input,
+.fm-mode-hc .fm-select,
+.fm-mode-hc .fm-textarea {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-input::placeholder,
+.fm-mode-hc .fm-textarea::placeholder {
+  color: color-mix(in srgb, var(--fm-color-highlight) 70%, transparent);
+}
+
+.fm-mode-hc .fm-input:focus-visible,
+.fm-mode-hc .fm-select:focus-visible,
+.fm-mode-hc .fm-textarea:focus-visible {
+  border-color: var(--fm-color-highlight);
+  box-shadow: 0 0 0 3px color-mix(in srgb,
+              var(--fm-color-highlight) 50%, transparent);
+}
+
+.fm-mode-hc .fm-input:disabled,
+.fm-mode-hc .fm-select:disabled,
+.fm-mode-hc .fm-textarea:disabled {
+  background: color-mix(in srgb, var(--fm-color-ink) 70%, black);
+  color: color-mix(in srgb, var(--fm-color-highlight) 50%, transparent);
+}
+
+.fm-mode-hc .fm-input[aria-invalid="true"],
+.fm-mode-hc .fm-input.is-invalid,
+.fm-mode-hc .fm-select[aria-invalid="true"],
+.fm-mode-hc .fm-select.is-invalid,
+.fm-mode-hc .fm-textarea[aria-invalid="true"],
+.fm-mode-hc .fm-textarea.is-invalid {
+  border-color: var(--fm-color-accent);
+}
+
+.fm-mode-hc .fm-select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%23ffd84d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M1 1.5l5 5 5-5'/></svg>");
+}
+
+.fm-mode-hc .fm-checkbox,
+.fm-mode-hc .fm-radio {
+  accent-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-check,
+.fm-mode-hc .fm-field__label {
+  color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-field__hint {
+  color: color-mix(in srgb, var(--fm-color-highlight) 80%, transparent);
+}
+
+.fm-mode-hc .fm-field__error {
+  color: var(--fm-color-accent);
+}
+
+.fm-mode-hc .fm-range::-webkit-slider-runnable-track {
+  background: color-mix(in srgb, var(--fm-color-highlight) 30%, transparent);
+}
+.fm-mode-hc .fm-range::-moz-range-track {
+  background: color-mix(in srgb, var(--fm-color-highlight) 30%, transparent);
+}
+.fm-mode-hc .fm-range::-webkit-slider-thumb {
+  background: var(--fm-color-highlight);
+  border-color: var(--fm-color-ink);
+}
+.fm-mode-hc .fm-range::-moz-range-thumb {
+  background: var(--fm-color-highlight);
+  border-color: var(--fm-color-ink);
+}
+
+/* High contrast for the modal. */
+
+.fm-mode-hc .fm-modal {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border: 2px solid var(--fm-color-highlight);
+  box-shadow: none;
+}
+
+.fm-mode-hc .fm-modal::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.fm-mode-hc .fm-modal__head,
+.fm-mode-hc .fm-modal__actions {
+  border-color: var(--fm-color-highlight);
+  background: var(--fm-color-ink);
+}
+
+.fm-mode-hc .fm-modal__title,
+.fm-mode-hc .fm-modal__close {
+  color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-modal__close:hover {
+  background: color-mix(in srgb, var(--fm-color-highlight) 14%, transparent);
+  color: var(--fm-color-highlight);
+}
+
+/* High contrast for the callout modifiers. */
+
+.fm-mode-hc .fm-callout--info,
+.fm-mode-hc .fm-callout--warn,
+.fm-mode-hc .fm-callout--error,
+.fm-mode-hc .fm-callout--danger,
+.fm-mode-hc .fm-callout--success,
+.fm-mode-hc .fm-callout--legal {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-left-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-callout--warn,
+.fm-mode-hc .fm-callout--error,
+.fm-mode-hc .fm-callout--danger {
+  border-left-color: var(--fm-color-accent);
+}
+
+/* High contrast for the tag modifiers (--ok/--success/--warn/--error/--danger). */
+
+.fm-mode-hc .fm-tag--ok,
+.fm-mode-hc .fm-tag--success,
+.fm-mode-hc .fm-tag--warn,
+.fm-mode-hc .fm-tag--error,
+.fm-mode-hc .fm-tag--danger {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border: 1px solid var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-tag--error,
+.fm-mode-hc .fm-tag--danger {
+  border-color: var(--fm-color-accent);
+  color: var(--fm-color-accent);
+}
+
+/* High contrast for .fm-mark — inverted (highlight on ink) so a search hit
+   stays visible in the HC palette. */
+.fm-mode-hc :where(mark),
+.fm-mode-hc .fm-mark {
+  background: var(--fm-color-highlight);
+  color: var(--fm-color-ink);
+}
+
+/* High contrast for .fm-table — ink on highlight, no zebra (too restless in
+   the HC palette). Sticky head and sticky column keep their logic and only
+   swap colours. */
+
+.fm-mode-hc .fm-table {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-table th,
+.fm-mode-hc .fm-table td {
+  border-bottom-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-table thead th {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-bottom: 2px solid var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-table tfoot td {
+  background: color-mix(in srgb, var(--fm-color-ink) 70%, black);
+  color: var(--fm-color-highlight);
+  border-top-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-table tbody tr:hover {
+  background: color-mix(in srgb, var(--fm-color-highlight) 18%, var(--fm-color-ink));
+}
+
+.fm-mode-hc .fm-table--zebra tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--fm-color-highlight) 8%, var(--fm-color-ink));
+}
+
+.fm-mode-hc .fm-table--sticky-col tbody td:first-child,
+.fm-mode-hc .fm-table--sticky-col tfoot td:first-child {
+  background: var(--fm-color-ink);
+}
+
+.fm-mode-hc .fm-table--sticky-col thead th:first-child {
+  background: var(--fm-color-ink);
+}
+
+.fm-mode-hc .fm-table__sortable.is-active::after {
+  color: var(--fm-color-accent);
+}
+
+.fm-mode-hc .fm-table-scroll {
+  border-color: var(--fm-color-highlight);
+}
+
+/* High contrast for .fm-dropzone — highlight border on ink, accent border in
+   the error state. */
+
+.fm-mode-hc .fm-dropzone {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-dropzone:hover,
+.fm-mode-hc .fm-dropzone.is-dragover {
+  background: color-mix(in srgb, var(--fm-color-highlight) 12%, var(--fm-color-ink));
+  border-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-dropzone.is-error {
+  border-color: var(--fm-color-accent);
+  color: var(--fm-color-accent);
+  background: var(--fm-color-ink);
+}
+
+.fm-mode-hc .fm-dropzone__icon,
+.fm-mode-hc .fm-dropzone__hint {
+  color: var(--fm-color-highlight);
+}
+
+/* High contrast for .fm-toast / .fm-toaster — ink + highlight, accent for
+   the error border. */
+
+.fm-mode-hc .fm-toast,
+.fm-mode-hc .fm-toast--info,
+.fm-mode-hc .fm-toast--success,
+.fm-mode-hc .fm-toast--warn,
+.fm-mode-hc .fm-toast--error {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-left-color: var(--fm-color-highlight);
+  box-shadow: 0 0 0 1px var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-toast--warn,
+.fm-mode-hc .fm-toast--error {
+  border-left-color: var(--fm-color-accent);
+}
+
+/* High contrast for .fm-toolbar — ink with a highlight border. No accent
+   shadow: shadows are invisible in the HC palette. */
+
+.fm-mode-hc .fm-toolbar {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-color: var(--fm-color-highlight);
+  box-shadow: 0 -1px 0 var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-toolbar--top {
+  box-shadow: 0 1px 0 var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-toolbar__count {
+  color: var(--fm-color-highlight);
+}
+
+/* High contrast for .fm-search — ink + highlight; the active item inverts to
+   a highlight surface, and the excerpt <mark> inherits the global HC
+   inversion. */
+
+.fm-mode-hc .fm-search__overlay {
+  background: var(--fm-color-ink);
+  border-color: var(--fm-color-highlight);
+  box-shadow: none;
+}
+
+.fm-mode-hc .fm-search__count {
+  color: var(--fm-color-highlight);
+  border-bottom-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-search__item,
+.fm-mode-hc .fm-search__item-title,
+.fm-mode-hc .fm-search__item-excerpt,
+.fm-mode-hc .fm-search__state {
+  color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-search__item:hover,
+.fm-mode-hc .fm-search__item.is-active {
+  background: color-mix(in srgb, var(--fm-color-highlight) 18%, var(--fm-color-ink));
+}
+
+.fm-mode-hc .fm-search__item.is-active {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fm-color-highlight) 50%, transparent);
+}
+
+.fm-mode-hc .fm-search__item-badge {
+  background: color-mix(in srgb, var(--fm-color-highlight) 14%, var(--fm-color-ink));
+  color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-search-trigger {
+  background: var(--fm-color-ink);
+  color: var(--fm-color-highlight);
+  border-color: var(--fm-color-highlight);
+}
+
+.fm-mode-hc .fm-search-trigger:focus-visible {
+  border-color: var(--fm-color-highlight);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fm-color-highlight) 50%, transparent);
+}
+
+.fm-mode-hc .fm-search-trigger__kbd {
+  background: color-mix(in srgb, var(--fm-color-highlight) 14%, var(--fm-color-ink));
+  color: var(--fm-color-highlight);
+  border-color: var(--fm-color-highlight);
+}
+
+/* === Patterns =============================================================
+   Cross-cutting accessibility and print rules. Configure
+   --fm-web-focus-ring / --fm-web-focus-offset if you need to; the rest
+   applies on its own. */
+
+.fm-btn:focus-visible,
+.fm-skiplink:focus-visible,
+.fm-tag:focus-visible,
+.fm-tab:focus-visible,
+.fm-switch-btn:focus-visible,
+.fm-header__brand:focus-visible,
+.fm-modal__close:focus-visible {
+  outline: 2px solid var(--fm-web-primary-deep);
+  outline-offset: var(--fm-web-focus-offset, 2px);
+  box-shadow: var(--fm-web-focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+  .fm-no-print { display: none !important; }
+  .fm-header {
+    background: #ffffff;
+    border-bottom: 1px solid #000000;
+    box-shadow: none;
+  }
+  .fm-header__nav { display: none; }
+  .fm-panel,
+  .fm-metric-card {
+    box-shadow: none;
+    border: 1px solid #999999;
+    break-inside: avoid;
+  }
+  .fm-metric-card--hero { background: #ffffff; }
+  .fm-metric-card::before { display: none; }
+  .fm-section-head,
+  .fm-panel__head {
+    break-inside: avoid;
+    break-after: avoid;
+  }
+  table { break-inside: auto; }
+  tr { break-inside: avoid; }
+  thead { display: table-header-group; }
+  h1, h2, h3, .fm-headline, .fm-subline { break-after: avoid; }
+  .fm-modal { display: none; }
+  .fm-callout,
+  .fm-callout--info,
+  .fm-callout--warn,
+  .fm-callout--error,
+  .fm-callout--danger,
+  .fm-callout--success,
+  .fm-callout--legal {
+    break-inside: avoid;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Convention class for a fixed header. Add a matching scroll-padding-top on
+   <html> so anchor jumps do not land behind it. */
+.fm-header--fixed {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.fm-header--fixed > * {
+  pointer-events: auto;
+}
