@@ -363,7 +363,12 @@
     --fm-text-micro:   var(--text-fm-micro);
 
     /* Line heights — multipliers, not absolute values */
+    /* Display leading is deliberately tight; it only works at headline size.
+       Anything smaller that can wrap to a second line needs its own value, or
+       the lines collide - a subline at 1.25rem with 0.9 leading has a line box
+       smaller than its own type. */
     --fm-leading-headline: 0.9;
+    --fm-leading-subline:  1.25;
     --fm-leading-copy:     1.3;
 
     /* Spacing */
@@ -1207,18 +1212,20 @@
   font-size: var(--fm-text-h1);
   line-height: var(--fm-leading-headline);
   color: var(--fm-color-text);
+  margin: 0 0 var(--fm-space-2);
 }
 
 .fm-subline {
   font-family: var(--fm-font-headline);
   font-weight: 600;
   font-size: var(--fm-text-subline);
-  line-height: var(--fm-leading-headline);
+  line-height: var(--fm-leading-subline);
   color: var(--fm-color-text);
+  margin: 0 0 var(--fm-space-3);
 }
 
-/* Deutsche Komposita brechen sauber — Headline-Klassen, neue Hero-/
-   Section-Head-/Panel-Header-Klassen (Tasks 7/8) erben das Verhalten. */
+/* Long compound words break cleanly rather than overflowing their container.
+   The hero, section-head and panel-header classes inherit this. */
 .fm-headline,
 .fm-subline,
 .fm-section-head h2,
@@ -1233,6 +1240,7 @@
   font-size: var(--fm-text-copy);
   line-height: var(--fm-leading-copy);
   color: var(--fm-color-text);
+  margin: 0 0 var(--fm-space-3);
 }
 
 .fm-emphasis {
@@ -1310,7 +1318,7 @@
   font-family: var(--fm-font-headline);
   font-weight: 700;
   font-size: var(--fm-text-h3);
-  line-height: var(--fm-leading-headline);
+  line-height: var(--fm-leading-subline);
 }
 
 .fm-card__body {
@@ -2047,8 +2055,8 @@
   display: block;
   font-weight: 700;
   margin-bottom: var(--fm-space-1);
-  /* Erbt color vom Callout — der Lead-Slot soll innerhalb jeder
-     semantischen Variante mitlaufen, ohne eigene Token-Trios zu brauchen. */
+  /* Inherits colour from the callout, so the lead slot follows every semantic
+     variant without needing token trios of its own. */
 }
 
 /* Optional icon slot: a container, not an image asset. Put an SVG — or a
@@ -2200,7 +2208,7 @@
 
 /* Sortable-column helper — cursor, padding for the arrow slot, and an
    .is-active state for the currently sorted column. The arrow is
-   CSS-Pseudo gerendert (kein Bild-Asset, kein DS-JS). */
+   drawn with a CSS pseudo-element: no image asset and no JavaScript. */
 .fm-table__sortable {
   cursor: pointer;
   user-select: none;
@@ -2678,8 +2686,8 @@
   color: var(--fm-web-text-soft);
 }
 
-/* Header-Lupe-Trigger, der das Modal/Strg+K oeffnet. Touch-Floor 44px wie
-   .fm-input. Ersetzt app-lokale .fm-header__search-Kopien. */
+/* The header magnifier that opens the modal / Ctrl-K search. Same 44px touch
+   floor as .fm-input, so apps stop hand-rolling their own header search. */
 .fm-search-trigger {
   display: inline-flex;
   align-items: center;
@@ -2728,9 +2736,9 @@
   line-height: 1.4;
 }
 
-/* Modal-Variante: das Feld IM .fm-modal (kombiniert mit .fm-modal--blur
-   --wide). Keine neue Modal-Shell. Auf schmalen Viewports Full-Screen —
-   100dvh statt 100vh wegen iOS-Safari-Adressleiste. */
+/* Modal variant: the field lives INSIDE .fm-modal (paired with --blur and
+   --wide). No second modal shell. Full-screen on narrow viewports, using
+   100dvh rather than 100vh because of the iOS Safari address bar. */
 .fm-search--modal {
   position: static;
 }
@@ -3154,6 +3162,18 @@
   background: color-mix(in srgb, var(--fm-hc-text) 14%, var(--fm-hc-surface));
   color: var(--fm-hc-text);
   border-color: var(--fm-hc-text);
+}
+
+/* Typography classes carry their own bottom margin, which would otherwise
+   leave dead space under the last child of a container. Strip it there rather
+   than asking every consumer to remember an inline margin: 0. */
+.fm-callout > :last-child,
+.fm-card__body > :last-child,
+.fm-panel__body > :last-child,
+.fm-modal__body > :last-child,
+.fm-hero > :last-child,
+.fm-toast__body > :last-child {
+  margin-bottom: 0;
 }
 
 /* === Patterns =============================================================
