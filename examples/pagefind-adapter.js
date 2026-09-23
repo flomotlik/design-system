@@ -8,9 +8,9 @@
  *
  * Usage:
  *   import { createSearch }
- *     from 'https://design-system.flomotlik.me/fm-search.js';
+ *     from 'https://flomotlik.github.io/design-system/fm-search.js';
  *   import { pagefindAdapter }
- *     from 'https://design-system.flomotlik.me/examples/pagefind-adapter.js';
+ *     from 'https://flomotlik.github.io/design-system/examples/pagefind-adapter.js';
  *
  *   createSearch({
  *     input: '#search',

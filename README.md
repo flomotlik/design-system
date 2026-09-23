@@ -4,14 +4,14 @@ A shared stylesheet for small web tools — consistent colour, typography and
 spacing, plus the components a data tool actually needs: header, forms,
 tables, dropzones, toasts, modals and search.
 
-Hosted as a static site on GitHub Pages: <https://design-system.flomotlik.me/>
+Hosted as a static site on GitHub Pages: <https://flomotlik.github.io/design-system/>
 
 ## Using it
 
 One link. No npm, no build step, no install:
 
 ```html
-<link rel="stylesheet" href="https://design-system.flomotlik.me/design-system.css">
+<link rel="stylesheet" href="https://flomotlik.github.io/design-system/design-system.css">
 ```
 
 For anything you want to stay visually stable — a generated report, an
@@ -19,7 +19,7 @@ archived artifact — link the **versioned** URL instead. It is frozen for the
 life of the major version:
 
 ```html
-<link rel="stylesheet" href="https://design-system.flomotlik.me/v1/design-system.css">
+<link rel="stylesheet" href="https://flomotlik.github.io/design-system/v1/design-system.css">
 ```
 
 ### The four lines everybody forgets
@@ -39,7 +39,7 @@ body {
 ```
 
 A complete working page is in [examples/minimal.html](examples/minimal.html),
-live at <https://design-system.flomotlik.me/examples/minimal.html>.
+live at <https://flomotlik.github.io/design-system/examples/minimal.html>.
 
 ## Tokens
 
@@ -70,7 +70,7 @@ Link your own stylesheet after the design system and override tokens in a
 plain `:root` block:
 
 ```html
-<link rel="stylesheet" href="https://design-system.flomotlik.me/design-system.css">
+<link rel="stylesheet" href="https://flomotlik.github.io/design-system/design-system.css">
 <link rel="stylesheet" href="local.css">
 ```
 
@@ -101,7 +101,7 @@ For ECharts-based data tools:
 
 ```js
 import { PALETTE, INK, tip, legend, grid, palette, ink, font }
-  from 'https://design-system.flomotlik.me/fm-charts.js';
+  from 'https://flomotlik.github.io/design-system/fm-charts.js';
 
 chart.setOption({
   color: palette(),                                   // follows --fm-web-chart-1..8
@@ -136,7 +136,7 @@ prefers-reduced-motion.
 
 <script type="module">
   import { createSearch }
-    from 'https://design-system.flomotlik.me/fm-search.js';
+    from 'https://flomotlik.github.io/design-system/fm-search.js';
 
   createSearch({
     input:   '#search',
